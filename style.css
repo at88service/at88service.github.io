@@ -13,6 +13,115 @@
 html { scroll-behavior: smooth; font-family: 'Inter', sans-serif; }
 body { margin: 0; background-color: var(--slate-50); color: var(--navy); overflow-x: hidden; }
 
+
+/* Footer Styles */
+.main-footer {
+    background-color: #0f172a;;
+    padding: 80px 2rem 40px;
+    border-top: 1px solid var(--slate-300);
+    color: white;
+}
+
+.footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 4rem;
+    margin-bottom: 60px;
+}
+
+.footer-brand p {
+    margin-top: 1.5rem;
+    color: white;
+    max-width: 300px;
+    line-height: 1.6;
+}
+
+.footer-links h4,
+.footer-contact h4 {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.8rem;
+    margin-bottom: 1.5rem;
+    color: white;
+}
+
+.footer-links a,
+.footer-contact a {
+    display: block;
+    text-decoration: none;
+    color: white;
+    margin-bottom: 0.8rem;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover,
+.footer-contact a:hover {
+    color: var(--red);
+}
+
+.phone-link {
+    font-size: 1.2rem;
+    font-weight: 700 !important;
+}
+
+.social-icons {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.social-icons a {
+    font-size: 0.9rem;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+/* Bottom Bar */
+.footer-bottom {
+    padding-top: 40px;
+    border-top: 1px solid var(--slate-300);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--slate-600);
+}
+
+.legal-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.legal-links a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Responsive Footer */
+@media (max-width: 768px) {
+    .footer-top {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        text-align: center;
+    }
+    .footer-brand p {
+        margin: 1.5rem auto;
+    }
+    .social-icons {
+        justify-content: center;
+    }
+    .footer-bottom {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+}
+
 /* Nasty 88 Logo */
 .logo-88 {
     font-weight: 900; font-size: 2.5rem;
@@ -20,6 +129,40 @@ body { margin: 0; background-color: var(--slate-50); color: var(--navy); overflo
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     letter-spacing: -2px;
+}
+
+.section, #gallery, header {
+    scroll-margin-top: 80px; /* Adjust this to match the height of your navbar */
+}
+
+/* Optional styling to make the links look premium */
+.nav-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: inherit;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+}
+
+.nav-item:hover {
+    color: var(--red); /* Matches your 88 branding */
 }
 
 /* Navigation */
@@ -36,7 +179,7 @@ body { margin: 0; background-color: var(--slate-50); color: var(--navy); overflo
 
 /* Hero Slider (CSS Only) */
 .hero-slider {
-    height: 85vh; width: 100%; overflow: hidden; position: relative; margin-top: 70px;  background: black;
+    height: 85vh; width: 100%; overflow: hidden; position: relative; margin-top: 70px;  --navy: #0f172a;
 }
 .slider-track {
     display: flex; width: 300%; height: 100%;
