@@ -9,8 +9,11 @@
         .card { background: var(--card); padding: 30px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); max-width: 800px; margin: 0 auto 30px; }
         .input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
         .btn { background: var(--blue); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
+        .btn:disabled { background: #94a3b8; cursor: not-allowed; }
         .btn-red { background: var(--red); }
         .hidden { display: none; }
+        #progress-container { width: 100%; background: #eee; height: 10px; border-radius: 5px; margin: 10px 0; display: none; }
+        #progress-bar { width: 0%; background: var(--blue); height: 100%; border-radius: 5px; transition: width 0.3s; }
     </style>
 </head>
 <body>
@@ -35,9 +38,14 @@
         <div class="card">
             <h2>Add Gallery Project</h2>
             <input type="text" id="g-title" placeholder="Project Name" class="input">
-            <input type="text" id="g-url" placeholder="Image Filename (e.g. car1.jpg)" class="input">
+            
+            <label style="font-size: 14px; font-weight: bold;">Select Image File:</label>
+            <input type="file" id="g-file" class="input" accept="image/*">
+            
+            <div id="progress-container"><div id="progress-bar"></div></div>
+
             <textarea id="g-desc" placeholder="Project Details" class="input" style="height: 80px;"></textarea>
-            <button id="add-gallery" class="btn">Post Project</button>
+            <button id="add-gallery" class="btn">Upload & Post Project</button>
         </div>
 
         <div class="card">
@@ -50,9 +58,10 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, addDoc, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        // NEW: Storage Imports
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
-        // Use the same Firebase config as above...
-                const firebaseConfig = {
+        const firebaseConfig = {
             apiKey: "AIzaSyAEvwmPsMFa1T6iSxvg6zFoZBd_R55rCQ8",
             authDomain: "service-6327f.firebaseapp.com",
             projectId: "service-6327f",
@@ -64,6 +73,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        const storage = getStorage(app);
 
         document.getElementById('loginBtn').onclick = () => {
             signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value).catch(e => alert(e.message));
@@ -80,14 +90,48 @@
             alert("Updated!");
         };
 
+        // NEW: Upload Logic
         document.getElementById('add-gallery').onclick = async () => {
-            await addDoc(collection(db, "gallery"), {
-                title: document.getElementById('g-title').value,
-                url: `/images/${document.getElementById('g-url').value}`,
-                description: document.getElementById('g-desc').value,
-                timestamp: Date.now()
-            });
-            alert("Gallery Item Live!");
+            const file = document.getElementById('g-file').files[0];
+            const title = document.getElementById('g-title').value;
+            const desc = document.getElementById('g-desc').value;
+            const btn = document.getElementById('add-gallery');
+
+            if (!file || !title) return alert("Please select a file and enter a title.");
+
+            btn.disabled = true;
+            document.getElementById('progress-container').style.display = 'block';
+
+            // 1. Create storage reference
+            const storageRef = ref(storage, 'images/' + Date.now() + "_" + file.name);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            uploadTask.on('state_changed', 
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    document.getElementById('progress-bar').style.width = progress + '%';
+                }, 
+                (error) => { alert("Upload failed: " + error.message); btn.disabled = false; }, 
+                async () => {
+                    // 2. Get the URL after upload finished
+                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                    
+                    // 3. Save to Firestore
+                    await addDoc(collection(db, "gallery"), {
+                        title: title,
+                        url: downloadURL,
+                        description: desc,
+                        timestamp: Date.now()
+                    });
+
+                    alert("Project Live with Image!");
+                    btn.disabled = false;
+                    document.getElementById('progress-container').style.display = 'none';
+                    document.getElementById('g-file').value = '';
+                    document.getElementById('g-title').value = '';
+                    document.getElementById('g-desc').value = '';
+                }
+            );
         };
 
         const q = query(collection(db, "inquiries"), orderBy("timestamp", "desc"));
@@ -96,7 +140,7 @@
             list.innerHTML = '';
             s.forEach(d => {
                 const data = d.data();
-                list.innerHTML += `<div style="padding:15px; border-bottom:1px solid #eee"><strong>${data.name}</strong>: ${data.message}</div>`;
+                list.innerHTML += `<div style="padding:15px; border-bottom:1px solid #eee"><strong>${data.name}</strong> (${data.email}): ${data.message}</div>`;
             });
         });
     </script>
