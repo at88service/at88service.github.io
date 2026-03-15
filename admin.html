@@ -2,47 +2,55 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>88 Service | Admin Panel</title>
+    <title>88 Admin | Blue & Red</title>
     <style>
-        :root { --bg: #0f172a; --card: #1e293b; --red: #dc2626; --white: #ffffff; }
-        body { background: var(--bg); color: var(--white); font-family: sans-serif; padding: 20px; }
-        .card { background: var(--card); padding: 2rem; border-radius: 1rem; border: 1px solid rgba(220,38,38,0.2); margin-bottom: 2rem; }
-        .form-input { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #334155; background: var(--bg); color: white; box-sizing: border-box; }
-        .btn-red { background: var(--red); color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
-        .hidden { display: none !important; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; max-width: 1100px; margin: 0 auto; }
-        .inquiry-card { background: #334155; padding: 15px; border-radius: 10px; border-left: 4px solid var(--red); margin-bottom: 10px; }
+        :root { --blue: #2563eb; --red: #dc2626; --bg: #f8fafc; --card: #ffffff; }
+        body { background: var(--bg); font-family: sans-serif; margin: 0; padding: 20px; }
+        .card { background: var(--card); padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid var(--blue); }
+        .form-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; }
+        .btn { background: var(--blue); color: white; padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .btn-red { background: var(--red); }
+        .hidden { display: none; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1200px; margin: 0 auto; }
     </style>
 </head>
 <body>
 
     <div id="login-form" class="card" style="max-width: 400px; margin: 100px auto;">
-        <h2 style="text-align: center;">88 Admin</h2>
-        <input type="email" id="email" placeholder="Email" class="form-input">
+        <h2 style="text-align:center">88 <span style="color:var(--red)">Admin</span></h2>
+        <input type="email" id="email" placeholder="Admin Email" class="form-input">
         <input type="password" id="pass" placeholder="Password" class="form-input">
-        <button id="loginBtn" class="btn-red">Login</button>
+        <button id="loginBtn" class="btn" style="width:100%">Enter Panel</button>
     </div>
 
     <div id="panel" class="hidden">
-        <header style="display:flex; justify-content: space-between; max-width:1100px; margin: 0 auto 40px;">
-            <h1>Control <span style="color:var(--red)">88</span></h1>
-            <button id="logoutBtn" style="color:#94a3b8; background:none; border:none; cursor:pointer;">Logout</button>
+        <header style="display:flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto 30px;">
+            <h1 style="color:var(--blue)">88 Control <span style="color:var(--red)">Panel</span></h1>
+            <button id="logoutBtn" class="btn btn-red">Logout</button>
         </header>
 
         <div class="grid">
-            <div>
+            <div class="col">
+                <div class="card">
+                    <h3>Company Profile (About)</h3>
+                    <textarea id="about-edit" class="form-input" style="height: 150px;"></textarea>
+                    <button id="save-about" class="btn">Update Company Info</button>
+                </div>
+
                 <div class="card">
                     <h3>Add Gallery Item</h3>
-                    <input type="text" id="g-title" placeholder="Project Title" class="form-input">
-                    <input type="text" id="g-url" placeholder="Image Filename (e.g. photo1.jpg)" class="form-input">
-                    <textarea id="g-desc" placeholder="Description" class="form-input" style="height:80px"></textarea>
-                    <button id="add-item" class="btn-red">Post to Gallery</button>
+                    <input type="text" id="g-title" placeholder="Project Name" class="form-input">
+                    <input type="text" id="g-url" placeholder="Filename (e.g. build1.jpg)" class="form-input">
+                    <textarea id="g-desc" placeholder="Brief Description" class="form-input"></textarea>
+                    <button id="add-gallery" class="btn">Upload to Public Site</button>
                 </div>
             </div>
-            <div class="card">
-                <h3 style="color:var(--red)">Client Requests</h3>
-                <div id="inquiry-list"></div>
+
+            <div class="col">
+                <div class="card" style="border-top-color: var(--red);">
+                    <h3>New Inquiries</h3>
+                    <div id="inquiry-list"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -50,7 +58,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAEvwmPsMFa1T6iSxvg6zFoZBd_R55rCQ8",
@@ -65,45 +73,56 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Auth Logic
+        // Login/Logout
         document.getElementById('loginBtn').onclick = () => {
-            const e = document.getElementById('email').value, p = document.getElementById('pass').value;
-            signInWithEmailAndPassword(auth, e, p).catch(err => alert("Login Failed: " + err.message));
+            signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value)
+                .catch(e => alert(e.message));
         };
         document.getElementById('logoutBtn').onclick = () => signOut(auth);
 
         onAuthStateChanged(auth, user => {
             document.getElementById('panel').classList.toggle('hidden', !user);
             document.getElementById('login-form').classList.toggle('hidden', !!user);
+            if(user) loadData();
         });
 
-        // Add Gallery (Local Path)
-        document.getElementById('add-item').onclick = async () => {
-            const fileName = document.getElementById('g-url').value;
-            try {
-                await addDoc(collection(db, "gallery"), {
-                    title: document.getElementById('g-title').value,
-                    url: `/images/${fileName}`, // Points to your local /images folder
-                    description: document.getElementById('g-desc').value,
-                    timestamp: Date.now()
+        function loadData() {
+            // Load About
+            onSnapshot(doc(db, "content", "about"), (d) => {
+                if(d.exists()) document.getElementById('about-edit').value = d.data().text;
+            });
+
+            // Load Inquiries
+            const q = query(collection(db, "inquiries"), orderBy("timestamp", "desc"));
+            onSnapshot(q, s => {
+                const list = document.getElementById('inquiry-list');
+                list.innerHTML = '';
+                s.forEach(d => {
+                    const data = d.data();
+                    list.innerHTML += `<div style="padding:15px; background:#f1f5f9; border-radius:10px; margin-bottom:10px; border-left:4px solid var(--red)">
+                        <strong>${data.name}</strong> (${data.email})<br><small>${data.message}</small>
+                    </div>`;
                 });
-                alert("Posted! Place " + fileName + " in your public/images folder.");
-            } catch(e) { alert("Permission Denied"); }
+            });
+        }
+
+        // Save About
+        document.getElementById('save-about').onclick = async () => {
+            await setDoc(doc(db, "content", "about"), { text: document.getElementById('about-edit').value });
+            alert("Profile Updated!");
         };
 
-        // Load Inquiries
-        const q = query(collection(db, "inquiries"), orderBy("timestamp", "desc"));
-        onSnapshot(q, s => {
-            const list = document.getElementById('inquiry-list');
-            list.innerHTML = '';
-            s.forEach(d => {
-                const data = d.data();
-                list.innerHTML += `<div class="inquiry-card">
-                    <p><strong>${data.name}</strong> (${data.email})</p>
-                    <p style="font-size:0.9rem">${data.message}</p>
-                </div>`;
+        // Add Gallery
+        document.getElementById('add-gallery').onclick = async () => {
+            const fileName = document.getElementById('g-url').value;
+            await addDoc(collection(db, "gallery"), {
+                title: document.getElementById('g-title').value,
+                url: `images/${fileName}`,
+                description: document.getElementById('g-desc').value,
+                timestamp: Date.now()
             });
-        });
+            alert("Gallery Item Live!");
+        };
     </script>
 </body>
 </html>
