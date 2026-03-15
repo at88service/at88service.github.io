@@ -11,9 +11,11 @@
             --navy: #0f172a;
             --bg: #f8fafc;
             --white: #ffffff;
+            --slate-600: #475569;
+            --slate-400: #94a3b8;
         }
 
-        body { background: var(--bg); font-family: 'Inter', sans-serif; margin: 0; padding: 20px; color: var(--navy); }
+        body { background: var(--bg); font-family: 'Inter', system-ui, sans-serif; margin: 0; padding: 20px; color: var(--navy); }
         .hidden { display: none !important; }
         .container { max-width: 1200px; margin: 0 auto; }
 
@@ -29,12 +31,14 @@
         .btn-red { background: var(--red); }
 
         /* Layout Grid */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
-        @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+        .grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 25px; }
+        @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
 
-        /* Inquiries & Items */
-        .list-item { padding: 15px; background: #f1f5f9; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid var(--red); display: flex; gap: 15px; align-items: center; }
-        .img-preview-small { width: 60px; height: 60px; border-radius: 8px; background: #cbd5e1; object-fit: cover; }
+        /* Inquiry & Gallery Items */
+        .list-item { padding: 15px; background: #f1f5f9; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid var(--blue); display: flex; gap: 15px; align-items: flex-start; }
+        .inquiry-item { border-left-color: var(--red); flex-direction: column; }
+        .inquiry-meta { display: flex; justify-content: space-between; width: 100%; font-weight: bold; margin-bottom: 5px; }
+        .img-preview-small { width: 60px; height: 60px; border-radius: 8px; background: #cbd5e1; object-fit: cover; flex-shrink: 0; }
         
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         .logo { font-weight: 900; font-size: 1.8rem; background: linear-gradient(135deg, var(--blue), var(--red)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -61,29 +65,29 @@
         <div class="grid">
             <div class="col">
                 <div class="card">
-                    <h3>Update Company Profile</h3>
-                    <textarea id="about-edit" class="form-input" style="height: 100px;"></textarea>
-                    <button id="save-about" class="btn">Update About Section</button>
+                    <h3>Company Profile (About)</h3>
+                    <textarea id="about-edit" class="form-input" style="height: 100px;" placeholder="Update the main 'The 88 Standard' text..."></textarea>
+                    <button id="save-about" class="btn">Update Site Text</button>
                 </div>
 
                 <div class="card">
-                    <h3>Add Gallery Item</h3>
+                    <h3>Add Gallery Project</h3>
                     <input type="text" id="g-title" placeholder="Project Title" class="form-input">
                     <textarea id="g-desc" placeholder="Project Description" class="form-input"></textarea>
                     <input type="file" id="g-file" class="form-input" accept="image/*">
-                    <button id="add-gallery" class="btn">Commit to GitHub</button>
+                    <button id="add-gallery" class="btn">Commit to GitHub Repository</button>
                 </div>
             </div>
 
             <div class="col">
                 <div class="card card-red">
-                    <h3>Recent Inquiries</h3>
-                    <div id="inquiry-list"></div>
+                    <h3>Client Inquiries</h3>
+                    <div id="inquiry-list" style="max-height: 400px; overflow-y: auto;"></div>
                 </div>
                 
                 <div class="card">
-                    <h3>Current Gallery</h3>
-                    <div id="admin-gallery-list"></div>
+                    <h3>Active Gallery</h3>
+                    <div id="admin-gallery-list" style="max-height: 400px; overflow-y: auto;"></div>
                 </div>
             </div>
         </div>
@@ -94,7 +98,6 @@
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // --- CONFIG ---
         const firebaseConfig = {
             apiKey: "AIzaSyAEvwmPsMFa1T6iSxvg6zFoZBd_R55rCQ8",
             authDomain: "service-6327f.firebaseapp.com",
@@ -111,7 +114,7 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- AUTH & TOKEN LOGIC ---
+        // --- AUTH & TOKEN ---
         document.getElementById('loginBtn').onclick = () => {
             const e = document.getElementById('email').value, p = document.getElementById('pass').value;
             signInWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
@@ -123,37 +126,48 @@
             document.getElementById('login-form').classList.toggle('hidden', !!user);
             if(user) {
                 if(!localStorage.getItem('gh_token')) {
-                    const t = prompt("Enter GitHub Personal Access Token (PAT):");
+                    const t = prompt("Security: Enter GitHub Personal Access Token (PAT):");
                     if(t) localStorage.setItem('gh_token', t);
                 }
-                loadData();
+                loadDashboardData();
             }
         });
 
-        // --- DATA SYNC ---
-        function loadData() {
+        // --- LOAD DASHBOARD ---
+        function loadDashboardData() {
+            // Load About
             onSnapshot(doc(db, "content", "about"), d => { if(d.exists()) document.getElementById('about-edit').value = d.data().text; });
             
-            // Inquiries
+            // Load Inquiries with Email Display
             onSnapshot(query(collection(db, "inquiries"), orderBy("timestamp", "desc")), s => {
                 const list = document.getElementById('inquiry-list');
                 list.innerHTML = '';
                 s.forEach(d => {
                     const data = d.data();
-                    list.innerHTML += `<div class="list-item"><div><strong>${data.name}</strong><br><small>${data.message}</small></div></div>`;
+                    const time = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleString() : 'Just now';
+                    list.innerHTML += `
+                        <div class="list-item inquiry-item">
+                            <div class="inquiry-meta">
+                                <span>${data.name}</span>
+                                <span style="color:var(--blue); font-weight:normal;">${data.email || ''}</span>
+                            </div>
+                            <div style="font-size:0.9rem; color:var(--slate-600); margin:5px 0;">${data.message}</div>
+                            <div style="font-size:0.7rem; color:var(--slate-400); text-align:right;">${time}</div>
+                        </div>`;
                 });
             });
 
-            // Gallery Preview
+            // Load Gallery Items
             onSnapshot(query(collection(db, "gallery"), orderBy("timestamp", "desc")), s => {
                 const list = document.getElementById('admin-gallery-list');
                 list.innerHTML = '';
                 s.forEach(d => {
                     const data = d.data();
-                    list.innerHTML += `<div class="list-item">
-                        <img src="${data.url}" class="img-preview-small" onerror="this.src='https://placehold.co/60x60?text=Pending'">
-                        <div><strong>${data.title}</strong></div>
-                    </div>`;
+                    list.innerHTML += `
+                        <div class="list-item">
+                            <img src="${data.url}" class="img-preview-small" onerror="this.src='https://placehold.co/60x60?text=Wait'">
+                            <div><strong>${data.title}</strong></div>
+                        </div>`;
                 });
             });
         }
@@ -161,7 +175,7 @@
         // --- ACTIONS ---
         document.getElementById('save-about').onclick = async () => {
             await setDoc(doc(db, "content", "about"), { text: document.getElementById('about-edit').value });
-            alert("Site updated!");
+            alert("Site Profile Updated!");
         };
 
         document.getElementById('add-gallery').onclick = async () => {
@@ -169,7 +183,7 @@
             const file = document.getElementById('g-file').files[0];
             const title = document.getElementById('g-title').value;
             
-            if(!token || !file || !title) return alert("Fill all fields and ensure Token is set.");
+            if(!token || !file || !title) return alert("Fill all project details and ensure Token is provided.");
 
             const btn = document.getElementById('add-gallery');
             btn.innerText = "Pushing to GitHub...";
@@ -184,10 +198,10 @@
                     const res = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/images/${fileName}`, {
                         method: "PUT",
                         headers: { "Authorization": `token ${token}`, "Content-Type": "application/json" },
-                        body: JSON.stringify({ message: `Add ${title}`, content: base64Content })
+                        body: JSON.stringify({ message: `Gallery Upload: ${title}`, content: base64Content })
                     });
 
-                    if(!res.ok) throw new Error("GitHub rejected upload. Check token.");
+                    if(!res.ok) throw new Error("GitHub rejected the request. Please check your Token permissions.");
 
                     await addDoc(collection(db, "gallery"), {
                         title: title,
@@ -196,9 +210,12 @@
                         timestamp: Date.now()
                     });
 
-                    alert("Successfully committed! Image will appear in ~60 seconds.");
+                    alert("Project Live! Image will be visible on site shortly.");
                     location.reload();
-                } catch(err) { alert(err.message); btn.innerText = "Commit to GitHub"; }
+                } catch(err) { 
+                    alert(err.message); 
+                    btn.innerText = "Commit to GitHub Repository"; 
+                }
             };
         };
     </script>
