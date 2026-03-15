@@ -1,150 +1,56 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>88 Service | Premium Solutions</title>
+    <title>88 Service | Admin Panel</title>
     <style>
-        :root {
-            --navy: #0f172a;
-            --red: #dc2626;
-            --slate-50: #f8fafc;
-            --slate-600: #475569;
-            --slate-900: #0f172a;
-            --glass: rgba(255, 255, 255, 0.8);
-        }
-
-        body { 
-            background: var(--slate-50); 
-            color: var(--slate-900); 
-            font-family: 'Segoe UI', system-ui, sans-serif; 
-            margin: 0; 
-            line-height: 1.6;
-        }
-
-        /* Navigation */
-        nav {
-            position: fixed; width: 100%; z-index: 100;
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
-        .nav-content {
-            max-width: 1200px; margin: 0 auto; padding: 1rem 2rem;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .logo-88 { font-size: 2rem; font-weight: 900; letter-spacing: -2px; }
-        .nav-links a { 
-            text-decoration: none; color: var(--slate-900); font-weight: 700; 
-            text-transform: uppercase; font-size: 0.75rem; letter-spacing: 2px;
-            margin-left: 2rem; transition: 0.3s;
-        }
-        .nav-links a:hover { color: var(--red); }
-
-        /* Hero Section */
-        .hero {
-            height: 100vh; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: white; display: flex; align-items: center; padding: 0 2rem;
-        }
-        .hero-content { max-width: 1200px; margin: 0 auto; width: 100%; }
-        .hero-title { font-size: clamp(3rem, 10vw, 6rem); font-weight: 900; margin: 0; }
-        .hero-subtitle { 
-            font-size: 1.25rem; color: #94a3b8; max-width: 500px; 
-            border-left: 3px solid var(--red); padding-left: 1.5rem; margin-top: 2rem;
-        }
-
-        /* Sections */
-        section { padding: 8rem 2rem; max-width: 1200px; margin: 0 auto; }
-        .section-tag { color: var(--red); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; }
-        
-        /* Gallery Layout */
-        .gallery-block { 
-            display: flex; gap: 4rem; align-items: center; margin-bottom: 8rem;
-            flex-direction: row; 
-        }
-        .gallery-block.reverse { flex-direction: row-reverse; }
-        .gallery-img-wrapper { flex: 1; border-radius: 20px; overflow: hidden; height: 450px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
-        .gallery-img-wrapper img { width: 100%; height: 100%; object-cover: cover; transition: 0.7s; }
-        .gallery-img-wrapper img:hover { transform: scale(1.05); }
-        .gallery-text { flex: 1; }
-
-        /* Contact Form */
-        .contact-section { background: var(--navy); color: white; border-radius: 30px; padding: 4rem; margin-top: 4rem; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
-        .form-input { 
-            width: 100%; padding: 1rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(255,255,255,0.05); color: white; box-sizing: border-box; font-size: 1rem;
-        }
-        .btn-red { 
-            background: var(--red); color: white; border: none; padding: 1rem 2rem; 
-            border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%; transition: 0.3s;
-        }
-        .btn-red:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(220, 38, 38, 0.4); }
-
-        @media (max-width: 768px) {
-            .gallery-block, .gallery-block.reverse { flex-direction: column; gap: 2rem; }
-            .form-grid { grid-template-columns: 1fr; }
-            .nav-links { display: none; }
-        }
+        :root { --bg: #0f172a; --card: #1e293b; --red: #dc2626; --white: #ffffff; }
+        body { background: var(--bg); color: var(--white); font-family: sans-serif; padding: 20px; }
+        .card { background: var(--card); padding: 2rem; border-radius: 1rem; border: 1px solid rgba(220,38,38,0.2); margin-bottom: 2rem; }
+        .form-input { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #334155; background: var(--bg); color: white; box-sizing: border-box; }
+        .btn-red { background: var(--red); color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
+        .hidden { display: none !important; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; max-width: 1100px; margin: 0 auto; }
+        .inquiry-card { background: #334155; padding: 15px; border-radius: 10px; border-left: 4px solid var(--red); margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="nav-content">
-            <div class="logo-88">88</div>
-            <div class="nav-links">
-                <a href="#about">About</a>
-                <a href="#gallery">Gallery</a>
-                <a href="#contact">Contact</a>
-            </div>
-        </div>
-    </nav>
+    <div id="login-form" class="card" style="max-width: 400px; margin: 100px auto;">
+        <h2 style="text-align: center;">88 Admin</h2>
+        <input type="email" id="email" placeholder="Email" class="form-input">
+        <input type="password" id="pass" placeholder="Password" class="form-input">
+        <button id="loginBtn" class="btn-red">Login</button>
+    </div>
 
-    <section class="hero" style="max-width: 100%; width: 100%; padding: 0;">
-        <div class="hero-content" style="padding: 0 2rem;">
-            <h1 class="hero-title">88 <span style="color:var(--red)">SERVICE</span></h1>
-            <p class="hero-subtitle">Excellence redefined through precision and creative execution.</p>
-        </div>
-    </section>
+    <div id="panel" class="hidden">
+        <header style="display:flex; justify-content: space-between; max-width:1100px; margin: 0 auto 40px;">
+            <h1>Control <span style="color:var(--red)">88</span></h1>
+            <button id="logoutBtn" style="color:#94a3b8; background:none; border:none; cursor:pointer;">Logout</button>
+        </header>
 
-    <section id="about">
-        <div style="display: flex; flex-wrap: wrap; gap: 4rem; align-items: center;">
-            <div style="flex: 1; min-width: 300px;">
-                <span class="section-tag">Company Profile</span>
-                <h2 style="font-size: 3rem; margin: 1rem 0;">The 88 Standard</h2>
-                <p id="about-text" style="color: var(--slate-600); font-size: 1.1rem;">Loading brand information...</p>
-            </div>
-            <div style="flex: 1; min-width: 300px; height: 400px; background: #000; border-radius: 30px; overflow: hidden;">
-                <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800" style="width:100%; height:100%; object-fit: cover; opacity: 0.7;">
-            </div>
-        </div>
-    </section>
-
-    <section id="gallery" style="background: #f1f5f9; max-width: 100%; width: 100%;">
-        <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
-            <div id="gallery-list">
+        <div class="grid">
+            <div>
+                <div class="card">
+                    <h3>Add Gallery Item</h3>
+                    <input type="text" id="g-title" placeholder="Project Title" class="form-input">
+                    <input type="text" id="g-url" placeholder="Image Filename (e.g. photo1.jpg)" class="form-input">
+                    <textarea id="g-desc" placeholder="Description" class="form-input" style="height:80px"></textarea>
+                    <button id="add-item" class="btn-red">Post to Gallery</button>
                 </div>
+            </div>
+            <div class="card">
+                <h3 style="color:var(--red)">Client Requests</h3>
+                <div id="inquiry-list"></div>
+            </div>
         </div>
-    </section>
-
-    <section id="contact">
-        <div class="contact-section">
-            <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 3rem;">Contact <span style="color:var(--red)">88</span></h2>
-            <form id="contactForm">
-                <div class="form-grid">
-                    <input type="text" id="custName" placeholder="Full Name" class="form-input" required>
-                    <input type="email" id="custEmail" placeholder="Email Address" class="form-input" required>
-                </div>
-                <textarea id="custMsg" rows="5" placeholder="Your Message" class="form-input" style="margin-bottom: 2rem;" required></textarea>
-                <button type="submit" class="btn-red">Submit Request</button>
-            </form>
-        </div>
-    </section>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAEvwmPsMFa1T6iSxvg6zFoZBd_R55rCQ8",
@@ -156,53 +62,48 @@
         };
 
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Fetch About
-        onSnapshot(doc(db, "content", "about"), (d) => {
-            if(d.exists()) document.getElementById('about-text').innerText = d.data().text;
+        // Auth Logic
+        document.getElementById('loginBtn').onclick = () => {
+            const e = document.getElementById('email').value, p = document.getElementById('pass').value;
+            signInWithEmailAndPassword(auth, e, p).catch(err => alert("Login Failed: " + err.message));
+        };
+        document.getElementById('logoutBtn').onclick = () => signOut(auth);
+
+        onAuthStateChanged(auth, user => {
+            document.getElementById('panel').classList.toggle('hidden', !user);
+            document.getElementById('login-form').classList.toggle('hidden', !!user);
         });
 
-        // Fetch Gallery
-        const gQuery = query(collection(db, "gallery"), orderBy("timestamp", "desc"));
-        onSnapshot(gQuery, (snap) => {
-            const list = document.getElementById('gallery-list');
+        // Add Gallery (Local Path)
+        document.getElementById('add-item').onclick = async () => {
+            const fileName = document.getElementById('g-url').value;
+            try {
+                await addDoc(collection(db, "gallery"), {
+                    title: document.getElementById('g-title').value,
+                    url: `/images/${fileName}`, // Points to your local /images folder
+                    description: document.getElementById('g-desc').value,
+                    timestamp: Date.now()
+                });
+                alert("Posted! Place " + fileName + " in your public/images folder.");
+            } catch(e) { alert("Permission Denied"); }
+        };
+
+        // Load Inquiries
+        const q = query(collection(db, "inquiries"), orderBy("timestamp", "desc"));
+        onSnapshot(q, s => {
+            const list = document.getElementById('inquiry-list');
             list.innerHTML = '';
-            snap.docs.forEach((d, i) => {
-                const item = d.data();
-                const isReverse = i % 2 !== 0 ? 'reverse' : '';
-                list.innerHTML += `
-                    <div class="gallery-block ${isReverse}">
-                        <div class="gallery-img-wrapper">
-                            <img src="${item.url}" alt="${item.title}">
-                        </div>
-                        <div class="gallery-text">
-                            <h3 style="font-size: 2.5rem; margin-bottom: 1.5rem;">${item.title}</h3>
-                            <p style="color: var(--slate-600); font-size: 1.1rem;">${item.description}</p>
-                        </div>
-                    </div>`;
+            s.forEach(d => {
+                const data = d.data();
+                list.innerHTML += `<div class="inquiry-card">
+                    <p><strong>${data.name}</strong> (${data.email})</p>
+                    <p style="font-size:0.9rem">${data.message}</p>
+                </div>`;
             });
         });
-
-        // Send Message
-        document.getElementById('contactForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
-            btn.innerText = "Sending...";
-            try {
-                await addDoc(collection(db, "inquiries"), {
-                    name: document.getElementById('custName').value,
-                    email: document.getElementById('custEmail').value,
-                    message: document.getElementById('custMsg').value,
-                    timestamp: serverTimestamp()
-                });
-                alert("Message sent to 88 Service!");
-                e.target.reset();
-            } catch (err) {
-                alert("Error sending message. Check your Firestore Rules!");
-            }
-            btn.innerText = "Submit Request";
-        };
     </script>
 </body>
 </html>

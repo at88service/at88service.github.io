@@ -3,89 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>88 Service | Admin Panel</title>
+    <title>88 Service | Premium</title>
     <style>
-        :root {
-            --bg-navy: #0f172a;
-            --slate-800: #1e293b;
-            --slate-700: #334155;
-            --red-600: #dc2626;
-            --white: #ffffff;
-        }
-        body { background: var(--bg-navy); color: var(--white); font-family: sans-serif; padding: 20px; margin: 0; }
-        .container { max-width: 1100px; margin: 0 auto; }
-        .hidden { display: none !important; }
-        
-        /* Form & Input Styles */
-        .card { background: var(--slate-800); padding: 2rem; border-radius: 1rem; border: 1px solid rgba(220, 38, 38, 0.2); margin-bottom: 2rem; }
-        .form-input { 
-            width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; 
-            border: 1px solid var(--slate-700); background: var(--bg-navy); color: white; box-sizing: border-box;
-        }
-        .btn-red { 
-            background: var(--red-600); color: white; padding: 12px 24px; border: none; 
-            border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s;
-        }
-        .btn-red:hover { opacity: 0.8; }
-        
-        /* Layout */
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
-        
-        /* Inquiry List */
-        .inquiry-card { 
-            background: var(--slate-700); padding: 15px; border-radius: 10px; 
-            border-left: 4px solid var(--red-600); margin-bottom: 10px; 
-        }
-        .inquiry-meta { display: flex; justify-content: space-between; font-size: 0.8rem; color: #cbd5e1; margin-bottom: 5px; }
-        .red-text { color: var(--red-600); }
+        :root { --navy: #0f172a; --red: #dc2626; --slate-50: #f8fafc; }
+        body { background: var(--slate-50); margin: 0; font-family: sans-serif; }
+        nav { position: fixed; width: 100%; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); padding: 1rem; z-index: 10; }
+        .hero { height: 100vh; background: var(--navy); color: white; display: flex; align-items: center; justify-content: center; text-align: center; }
+        .gallery-block { display: flex; align-items: center; gap: 4rem; padding: 4rem 2rem; max-width: 1200px; margin: 0 auto; }
+        .gallery-block.reverse { flex-direction: row-reverse; }
+        .gallery-img { flex: 1; border-radius: 20px; overflow: hidden; height: 400px; }
+        .gallery-img img { width: 100%; height: 100%; object-fit: cover; }
+        .gallery-text { flex: 1; }
+        .contact { background: var(--navy); color: white; padding: 4rem 2rem; border-radius: 40px; margin: 2rem; }
     </style>
 </head>
 <body>
 
-    <div id="login-form" class="card" style="max-width: 400px; margin: 100px auto;">
-        <h2 style="text-align: center;">88 <span class="red-text">Admin</span></h2>
-        <input type="email" id="email" placeholder="Email" class="form-input">
-        <input type="password" id="pass" placeholder="Password" class="form-input">
-        <button onclick="login()" class="btn-red">Login</button>
+    <nav><div style="max-width:1200px; margin:0 auto; font-weight:900; font-size:1.5rem;">88</div></nav>
+
+    <div class="hero">
+        <div><h1 style="font-size:5rem; margin:0;">88 SERVICE</h1></div>
     </div>
 
-    <div id="panel" class="hidden container">
-        <header>
-            <h1>Control <span class="red-text">88</span></h1>
-            <button onclick="logout()" style="background:none; border:none; color:#94a3b8; cursor:pointer;">Logout</button>
-        </header>
+    <div id="gallery-list"></div>
 
-        <div class="grid">
-            <div class="left-col">
-                <div class="card">
-                    <h3 style="font-size: 12px; text-transform: uppercase; color: #60a5fa;">Company Info</h3>
-                    <textarea id="about-input" class="form-input" style="height: 100px;" placeholder="Update company about info..."></textarea>
-                    <button id="save-about" class="btn-red" style="width: auto;">Update About</button>
-                </div>
-
-                <div class="card">
-                    <h3 style="font-size: 12px; text-transform: uppercase; color: #60a5fa;">Add Gallery Item</h3>
-                    <input type="text" id="g-title" placeholder="Project Title" class="form-input">
-                    <input type="text" id="g-url" placeholder="Direct Image URL" class="form-input">
-                    <textarea id="g-desc" placeholder="Project Description" class="form-input" style="height: 80px;"></textarea>
-                    <button id="add-item" class="btn-red">Post to Gallery</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3 style="font-size: 12px; text-transform: uppercase; color: var(--red-600);">Client Requests</h3>
-                <div id="inquiry-list" style="max-height: 500px; overflow-y: auto;">
-                    </div>
-            </div>
-        </div>
+    <div class="contact" id="contact">
+        <form id="contactForm" style="max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem;">
+            <input type="text" id="custName" placeholder="Name" style="padding:1rem; border-radius:10px; border:none;" required>
+            <input type="email" id="custEmail" placeholder="Email" style="padding:1rem; border-radius:10px; border:none;" required>
+            <textarea id="custMsg" placeholder="Message" style="padding:1rem; border-radius:10px; border:none; height:100px;" required></textarea>
+            <button type="submit" style="background:var(--red); color:white; padding:1rem; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">Send</button>
+        </form>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, addDoc, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAEvwmPsMFa1T6iSxvg6zFoZBd_R55rCQ8",
@@ -97,63 +50,35 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Global functions for buttons
-        window.login = () => {
-            const e = document.getElementById('email').value;
-            const p = document.getElementById('pass').value;
-            signInWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
-        };
-        window.logout = () => signOut(auth);
-
-        // Auth State Toggle
-        onAuthStateChanged(auth, user => {
-            const p = document.getElementById('panel'), l = document.getElementById('login-form');
-            if(user) { p.classList.remove('hidden'); l.classList.add('hidden'); }
-            else { p.classList.add('hidden'); l.classList.remove('hidden'); }
-        });
-
-        // Update About
-        document.getElementById('save-about').onclick = async () => {
-            const text = document.getElementById('about-input').value;
-            try {
-                await setDoc(doc(db, "content", "about"), { text });
-                alert("About Info Updated!");
-            } catch(e) { alert("Error: No permission"); }
-        };
-
-        // Add Gallery Item
-        document.getElementById('add-item').onclick = async () => {
-            try {
-                await addDoc(collection(db, "gallery"), { 
-                    title: document.getElementById('g-title').value, 
-                    url: document.getElementById('g-url').value, 
-                    description: document.getElementById('g-desc').value,
-                    timestamp: Date.now()
-                });
-                alert("Gallery Item Added!");
-                document.getElementById('g-title').value = '';
-                document.getElementById('g-url').value = '';
-                document.getElementById('g-desc').value = '';
-            } catch(e) { alert("Error: No permission"); }
-        };
-
-        // Real-time Inquiries
-        const q = query(collection(db, "inquiries"), orderBy("timestamp", "desc"));
-        onSnapshot(q, s => {
-            const list = document.getElementById('inquiry-list');
+        // Load Gallery
+        const q = query(collection(db, "gallery"), orderBy("timestamp", "desc"));
+        onSnapshot(q, snap => {
+            const list = document.getElementById('gallery-list');
             list.innerHTML = '';
-            s.forEach(d => {
-                const data = d.data();
-                list.innerHTML += `
-                <div class="inquiry-card">
-                    <div class="inquiry-meta"><strong>${data.name || 'Anonymous'}</strong><span>${data.email || ''}</span></div>
-                    <p style="margin:0; font-size:0.9rem;">${data.message || 'No message'}</p>
+            snap.docs.forEach((d, i) => {
+                const item = d.data();
+                const rev = i % 2 !== 0 ? 'reverse' : '';
+                list.innerHTML += `<div class="gallery-block ${rev}">
+                    <div class="gallery-img"><img src="${item.url}"></div>
+                    <div class="gallery-text"><h2>${item.title}</h2><p>${item.description}</p></div>
                 </div>`;
             });
-        });
+        }, err => console.log("Check Firestore Rules: ", err));
+
+        // Submit Inquiry
+        document.getElementById('contactForm').onsubmit = async (e) => {
+            e.preventDefault();
+            await addDoc(collection(db, "inquiries"), {
+                name: document.getElementById('custName').value,
+                email: document.getElementById('custEmail').value,
+                message: document.getElementById('custMsg').value,
+                timestamp: serverTimestamp()
+            });
+            alert("Sent!");
+            e.target.reset();
+        };
     </script>
 </body>
 </html>
