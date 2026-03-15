@@ -6,91 +6,58 @@
     <title>88 Admin | Dashboard</title>
     <style>
         :root { --blue: #2563eb; --red: #dc2626; --navy: #0f172a; --bg: #f1f5f9; --white: #ffffff; }
-        body { background: var(--bg); font-family: 'Inter', sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
-        
-        /* Layout */
+        body { background: var(--bg); font-family: 'Inter', sans-serif; margin: 0; }
         .header { background: var(--navy); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; width: 100%; box-sizing: border-box; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
         .grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 2rem; }
-        
-        /* Cards & UI */
-        .card { background: var(--white); border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 2rem; border-top: 4px solid var(--blue); }
-        .form-group { margin-bottom: 1rem; }
-        label { display: block; font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 0.4rem; }
-        .form-input { width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-family: inherit; }
-        
-        /* Buttons */
-        .btn { padding: 0.75rem 1.5rem; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; transition: 0.2s; font-size: 0.9rem; }
+        .card { background: var(--white); border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 2rem; border-top: 4px solid var(--blue); }
+        .form-input { width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; margin-bottom: 10px; }
+        .btn { padding: 0.75rem 1.5rem; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; transition: 0.2s; }
         .btn-blue { background: var(--blue); color: white; width: 100%; }
         .btn-red { background: var(--red); color: white; }
-        .btn-outline { background: transparent; border: 1px solid #cbd5e1; color: #475569; }
-        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
-
-        /* Management List */
-        .manage-item { border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; background: #f8fafc; }
-        .item-preview { display: flex; gap: 1rem; align-items: flex-start; }
-        .preview-img { width: 80px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd; }
-        .item-info { flex-grow: 1; }
-        .item-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
-        
+        .manage-item { border-bottom: 1px solid #eee; padding: 10px 0; display: flex; justify-content: space-between; align-items: center; }
+        .preview-img { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; }
         .hidden { display: none !important; }
-        .edit-fields { margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed #cbd5e1; }
     </style>
 </head>
 <body>
 
     <div id="login-form" style="max-width: 400px; margin: 100px auto;" class="card">
         <h2 style="text-align:center">88 <span style="color:var(--red)">ADMIN</span></h2>
-        <input type="email" id="email" placeholder="Admin Email" class="form-input" style="margin-bottom:10px">
-        <input type="password" id="pass" placeholder="Password" class="form-input" style="margin-bottom:15px">
-        <button id="loginBtn" class="btn btn-blue">Enter Dashboard</button>
+        <input type="email" id="email" placeholder="Email" class="form-input">
+        <input type="password" id="pass" placeholder="Password" class="form-input">
+        <button id="loginBtn" class="btn btn-blue">Login</button>
     </div>
 
     <div id="panel" class="hidden">
         <header class="header">
-            <h1 style="margin:0; font-size: 1.5rem;">88 SERVICE <span style="font-weight:300; opacity:0.7">Dashboard</span></h1>
-            <button id="logoutBtn" class="btn btn-red" style="padding: 0.5rem 1rem;">Logout</button>
+            <h1 style="margin:0">88 ADMIN</h1>
+            <button id="logoutBtn" class="btn btn-red">Logout</button>
         </header>
-
-        <div class="container">
-            <div class="grid">
-                <div class="col">
-                    <div class="card">
-                        <h3>Update About Section</h3>
-                        <textarea id="about-edit" class="form-input" style="height: 120px;"></textarea>
-                        <button id="save-about" class="btn btn-blue" style="margin-top:1rem">Update Site Text</button>
-                    </div>
-
-                    <div class="card">
-                        <h3>Add New Work / Slider</h3>
-                        <div class="form-group">
-                            <label>Title</label>
-                            <input type="text" id="g-title" class="form-input" placeholder="e.g. Modern Villa Interior">
-                        </div>
-                        <div class="form-group">
-                            <label>Image URL</label>
-                            <input type="text" id="g-url" class="form-input" placeholder="https://...">
-                        </div>
-                        <div class="form-group">
-                            <label>Description</label>
-                            <textarea id="g-desc" class="form-input" style="height: 80px;"></textarea>
-                        </div>
-                        <label style="display:flex; align-items:center; gap:10px; cursor:pointer">
-                            <input type="checkbox" id="g-hero"> <span>Show in Hero Slider</span>
-                        </label>
-                        <button id="add-gallery" class="btn btn-blue" style="margin-top:1.5rem">Post to Site</button>
-                    </div>
+        <div class="container grid">
+            <div class="col">
+                <div class="card">
+                    <h3>About Text</h3>
+                    <textarea id="about-edit" class="form-input" style="height:100px"></textarea>
+                    <button id="save-about" class="btn btn-blue">Update About</button>
                 </div>
-
-                <div class="col">
-                    <div class="card">
-                        <h3 style="display:flex; justify-content:space-between; align-items:center;">
-                            Manage Content
-                            <span style="font-size:0.7rem; background:#e2e8f0; padding:2px 8px; border-radius:10px;">Live View</span>
-                        </h3>
-                        <div id="live-list">
-                            </div>
-                    </div>
+                <div class="card">
+                    <h3>New Image Link</h3>
+                    <input type="text" id="g-title" placeholder="Title" class="form-input">
+                    <input type="text" id="g-url" placeholder="Image URL" class="form-input">
+                    <textarea id="g-desc" placeholder="Description" class="form-input"></textarea>
+                    <label><input type="checkbox" id="g-hero"> Add to Slider</label>
+                    <button id="add-gallery" class="btn btn-blue" style="margin-top:10px">Post Image</button>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <h3>Live Content</h3>
+                    <div id="live-list"></div>
+                </div>
+                <div class="card">
+                    <h3>Inquiries</h3>
+                    <div id="inquiry-list"></div>
                 </div>
             </div>
         </div>
@@ -99,9 +66,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, addDoc, collection, query, orderBy, onSnapshot, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, addDoc, collection, query, orderBy, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Your Config
         const firebaseConfig = {
             apiKey: "AIzaSyAEvwmPsMFa1T6iSxvg6zFoZBd_R55rCQ8",
             authDomain: "service-6327f.firebaseapp.com",
@@ -115,108 +81,64 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- AUTH ---
         document.getElementById('loginBtn').onclick = () => {
             signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value).catch(e => alert(e.message));
         };
         document.getElementById('logoutBtn').onclick = () => signOut(auth);
 
         onAuthStateChanged(auth, user => {
-            document.getElementById('panel').classList.toggle('hidden', !user);
-            document.getElementById('login-form').classList.toggle('hidden', !!user);
-            if(user) loadData();
+            if(user) {
+                document.getElementById('panel').classList.remove('hidden');
+                document.getElementById('login-form').classList.add('hidden');
+                loadData();
+            } else {
+                document.getElementById('panel').classList.add('hidden');
+                document.getElementById('login-form').classList.remove('hidden');
+            }
         });
 
-        // --- CORE LOGIC ---
         function loadData() {
-            // 1. Sync About Text
             onSnapshot(doc(db, "content", "about"), d => { if(d.exists()) document.getElementById('about-edit').value = d.data().text; });
-
-            // 2. Manage Gallery / Slider Items
-            const q = query(collection(db, "gallery"), orderBy("timestamp", "desc"));
-            onSnapshot(q, s => {
+            
+            onSnapshot(query(collection(db, "gallery"), orderBy("timestamp", "desc")), s => {
                 const list = document.getElementById('live-list');
                 list.innerHTML = '';
-                
                 s.forEach(d => {
                     const data = d.data();
-                    const id = d.id;
-                    
-                    const div = document.createElement('div');
-                    div.className = 'manage-item';
-                    div.innerHTML = `
-                        <div class="item-preview">
-                            <img src="${data.url}" class="preview-img" onerror="this.src='https://via.placeholder.com/80'">
-                            <div class="item-info">
-                                <strong style="display:block">${data.title}</strong>
-                                <small style="color:#64748b">${data.isHero ? '⭐ Slider' : '📷 Gallery'}</small>
-                            </div>
-                        </div>
-                        
-                        <div class="item-actions" id="actions-${id}">
-                            <button class="btn btn-outline" onclick="toggleEdit('${id}')">Edit</button>
-                            <button class="btn btn-red" onclick="deleteItem('${id}')" style="padding:0.4rem 0.8rem">Delete</button>
-                        </div>
+                    list.innerHTML += `<div class="manage-item">
+                        <img src="${data.url}" class="preview-img">
+                        <span>${data.title}</span>
+                        <button class="btn btn-red" onclick="window.del('${d.id}')">Del</button>
+                    </div>`;
+                });
+            });
 
-                        <div id="edit-form-${id}" class="edit-fields hidden">
-                            <input type="text" id="edit-title-${id}" class="form-input" value="${data.title}" style="margin-bottom:5px">
-                            <input type="text" id="edit-url-${id}" class="form-input" value="${data.url}" style="margin-bottom:5px">
-                            <textarea id="edit-desc-${id}" class="form-input" style="margin-bottom:5px">${data.description || ''}</textarea>
-                            <label><input type="checkbox" id="edit-hero-${id}" ${data.isHero ? 'checked' : ''}> Slider Feature</label>
-                            <div class="item-actions">
-                                <button class="btn btn-blue" onclick="saveEdit('${id}')">Save Changes</button>
-                                <button class="btn btn-outline" onclick="toggleEdit('${id}')">Cancel</button>
-                            </div>
-                        </div>
-                    `;
-                    list.appendChild(div);
+            onSnapshot(query(collection(db, "inquiries"), orderBy("timestamp", "desc")), s => {
+                const list = document.getElementById('inquiry-list');
+                list.innerHTML = '';
+                s.forEach(d => {
+                    list.innerHTML += `<div class="manage-item">
+                        <div><strong>${d.data().name}</strong>: ${d.data().message}</div>
+                        <button class="btn btn-red" onclick="window.delInq('${d.id}')">X</button>
+                    </div>`;
                 });
             });
         }
 
-        // --- ACTIONS (Global Scope for onclick) ---
-        window.deleteItem = async (id) => {
-            if(confirm("Permanently delete this item?")) await deleteDoc(doc(db, "gallery", id));
-        };
+        window.del = id => deleteDoc(doc(db, "gallery", id));
+        window.delInq = id => deleteDoc(doc(db, "inquiries", id));
 
-        window.toggleEdit = (id) => {
-            document.getElementById(`edit-form-${id}`).classList.toggle('hidden');
-            document.getElementById(`actions-${id}`).classList.toggle('hidden');
-        };
-
-        window.saveEdit = async (id) => {
-            const updData = {
-                title: document.getElementById(`edit-title-${id}`).value,
-                url: document.getElementById(`edit-url-${id}`).value,
-                description: document.getElementById(`edit-desc-${id}`).value,
-                isHero: document.getElementById(`edit-hero-${id}`).checked
-            };
-            await updateDoc(doc(db, "gallery", id), updData);
-            alert("Updated successfully!");
-        };
-
-        document.getElementById('save-about').onclick = async () => {
-            await setDoc(doc(db, "content", "about"), { text: document.getElementById('about-edit').value });
-            alert("Site description updated!");
-        };
-
+        document.getElementById('save-about').onclick = () => setDoc(doc(db, "content", "about"), { text: document.getElementById('about-edit').value });
+        
         document.getElementById('add-gallery').onclick = async () => {
-            const title = document.getElementById('g-title').value;
-            const url = document.getElementById('g-url').value;
-            if(!title || !url) return alert("Please enter Title and Image URL");
-            
             await addDoc(collection(db, "gallery"), {
-                title, url, 
+                title: document.getElementById('g-title').value,
+                url: document.getElementById('g-url').value,
                 description: document.getElementById('g-desc').value,
                 isHero: document.getElementById('g-hero').checked,
                 timestamp: Date.now()
             });
-            
-            // Reset fields
-            document.getElementById('g-title').value = '';
-            document.getElementById('g-url').value = '';
-            document.getElementById('g-desc').value = '';
-            alert("Successfully posted!");
+            alert("Posted!");
         };
     </script>
 </body>

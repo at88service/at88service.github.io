@@ -9,30 +9,21 @@
 <body>
 
     <nav class="glass-nav">
-        <div class="nav-inner">
-            <div class="logo-88">88</div>
-        </div>
+        <div class="nav-inner"><div class="logo-88">88</div></div>
     </nav>
 
     <header class="hero-slider">
-        <div class="slider-track" id="main-slider">
-            </div>
+        <div class="slider-track" id="main-slider"></div>
     </header>
 
     <section id="about" class="section">
         <span class="section-tag">Since 2026</span>
         <h2 style="font-size: 3rem; margin: 1rem 0;">The 88 Standard</h2>
-        <p id="about-text" style="font-size: 1.2rem; line-height: 1.8; color: var(--slate-600); border-left: 4px solid var(--red); padding-left: 2rem;">
-            Loading brand information...
-        </p>
+        <p id="about-text" style="font-size: 1.2rem; line-height: 1.8; border-left: 4px solid var(--red); padding-left: 2rem;">Loading...</p>
     </section>
 
     <section id="gallery" class="section" style="background: #f1f5f9; max-width: 100%;">
-        <div style="max-width: 1200px; margin: 0 auto;">
-            <h2 style="text-align: center; font-size: 3rem; margin-bottom: 4rem;">Recent <span style="color:var(--blue)">Works</span></h2>
-            <div id="gallery-list">
-                </div>
-        </div>
+        <div id="gallery-list" style="max-width:1200px; margin:0 auto;"></div>
     </section>
 
     <section class="section">
@@ -41,11 +32,11 @@
                 <h2 style="text-align: center; font-size: 3rem; margin-bottom: 2rem;">START A PROJECT <span style="color:var(--red)">88</span></h2>
                 <form id="contactForm">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <input type="text" id="custName" placeholder="Name" class="form-input" required>
+                        <input type="text" id="custName" placeholder="Name" class="form-input" required maxlength="50">
                         <input type="email" id="custEmail" placeholder="Email" class="form-input" required>
                     </div>
-                    <textarea id="custMsg" rows="5" placeholder="Project details..." class="form-input" required></textarea>
-                    <button type="submit" class="btn-red">SEND REQUEST</button>
+                    <textarea id="custMsg" rows="5" placeholder="Project details..." class="form-input" required maxlength="500"></textarea>
+                    <button type="submit" id="sendBtn" class="btn-red">SEND REQUEST</button>
                 </form>
             </div>
         </div>
@@ -67,62 +58,35 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // 1. Load About Section
-        onSnapshot(doc(db, "content", "about"), (d) => {
-            if(d.exists()) document.getElementById('about-text').innerText = d.data().text;
-        });
+        // Fetch About
+        onSnapshot(doc(db, "content", "about"), d => { if(d.exists()) document.getElementById('about-text').innerText = d.data().text; });
 
-        // 2. Load Slider and Gallery
-        const q = query(collection(db, "gallery"), orderBy("timestamp", "desc"));
-        onSnapshot(q, snap => {
-            const galleryList = document.getElementById('gallery-list');
-            const sliderTrack = document.getElementById('main-slider');
+        // Fetch Gallery & Slider
+        onSnapshot(query(collection(db, "gallery"), orderBy("timestamp", "desc")), snap => {
+            const gList = document.getElementById('gallery-list');
+            const sTrack = document.getElementById('main-slider');
+            gList.innerHTML = ''; sTrack.innerHTML = '';
             
-            galleryList.innerHTML = '';
-            sliderTrack.innerHTML = '';
-
-            let heroCount = 0;
-
+            let hCount = 0;
             snap.docs.forEach((d, i) => {
                 const item = d.data();
-
-                // Build Slider (limited to 3 items to match your CSS 300% width logic)
-                if (item.isHero && heroCount < 3) {
-                    sliderTrack.innerHTML += `
-                        <div class="slide" style="background-image: url('${item.url}')">
-                            <div class="slide-overlay">
-                                <div class="hero-text"><h1>${item.title.toUpperCase()}</h1></div>
-                            </div>
-                        </div>`;
-                    heroCount++;
+                if(item.isHero && hCount < 3) {
+                    sTrack.innerHTML += `<div class="slide" style="background-image:url('${item.url}')"><div class="slide-overlay"><div class="hero-text"><h1>${item.title.toUpperCase()}</h1></div></div></div>`;
+                    hCount++;
                 }
-
-                // Build Gallery Block (matches your CSS classes)
-                const isReverse = i % 2 !== 0 ? 'reverse' : '';
-                galleryList.innerHTML += `
-                    <div class="gallery-block ${isReverse}">
-                        <div class="gallery-img-wrapper">
-                            <img src="${item.url}" onerror="this.src='https://via.placeholder.com/600x400'">
-                        </div>
-                        <div class="gallery-text">
-                            <h3>${item.title}</h3>
-                            <p style="color: var(--slate-600); font-size: 1.1rem;">${item.description}</p>
-                        </div>
-                    </div>`;
+                const rev = i % 2 !== 0 ? 'reverse' : '';
+                gList.innerHTML += `<div class="gallery-block ${rev}"><div class="gallery-img-wrapper"><img src="${item.url}"></div><div class="gallery-text"><h3>${item.title}</h3><p>${item.description}</p></div></div>`;
             });
-            
-            // If less than 3 hero items exist, adjust track width so it doesn't break
-            if (heroCount > 0) {
-                sliderTrack.style.width = (heroCount * 100) + "%";
-                // Adjust slide width based on count
-                const slides = sliderTrack.querySelectorAll('.slide');
-                slides.forEach(s => s.style.width = (100 / heroCount) + "%");
-            }
+            sTrack.style.width = (hCount * 100) + "%";
+            sTrack.querySelectorAll('.slide').forEach(s => s.style.width = (100 / hCount) + "%");
         });
 
-        // 3. Contact Form Submission
+        // Anti-Spam Submission
+        let lastSent = 0;
         document.getElementById('contactForm').onsubmit = async (e) => {
             e.preventDefault();
+            if(Date.now() - lastSent < 60000) return alert("Please wait 1 minute.");
+            
             try {
                 await addDoc(collection(db, "inquiries"), {
                     name: document.getElementById('custName').value,
@@ -130,11 +94,10 @@
                     message: document.getElementById('custMsg').value,
                     timestamp: serverTimestamp()
                 });
-                alert("Message sent to 88 Service!");
+                lastSent = Date.now();
+                alert("Sent!");
                 e.target.reset();
-            } catch (err) {
-                alert("Error sending message.");
-            }
+            } catch (e) { alert("Error."); }
         };
     </script>
 </body>
