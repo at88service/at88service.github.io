@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>88 Admin | GitHub Live</title>
+    <title>88 Admin | GitHub Automation</title>
     <style>
         :root { --blue: #2563eb; --red: #dc2626; --navy: #0f172a; --bg: #f8fafc; }
         body { background: var(--bg); font-family: sans-serif; padding: 20px; }
@@ -11,45 +11,41 @@
         .form-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; }
         .btn { background: var(--blue); color: white; padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
         .hidden { display: none !important; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; max-width: 1200px; margin: 0 auto; }
-        .inquiry-item { padding: 15px; background: #f1f5f9; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid var(--red); }
+        header { display: flex; justify-content: space-between; max-width: 1200px; margin: 0 auto 30px; }
+        .logo { font-weight: 900; font-size: 2rem; background: linear-gradient(135deg, var(--blue), var(--red)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     </style>
 </head>
 <body>
 
-    <div id="login-form" class="card" style="max-width: 400px; margin: 100px auto; text-align: center;">
-        <h2 style="font-weight:900">88 <span style="color:var(--red)">ADMIN</span></h2>
+    <div id="login-form" class="card" style="max-width: 400px; margin: 100px auto;">
+        <h2 style="text-align: center;">88 ADMIN</h2>
         <input type="email" id="email" placeholder="Email" class="form-input">
         <input type="password" id="pass" placeholder="Password" class="form-input">
-        <button id="loginBtn" class="btn">Login</button>
+        <button id="loginBtn" class="btn">Enter Panel</button>
     </div>
 
-    <div id="panel" class="hidden container">
-        <header style="display:flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto 30px;">
-            <h1 style="font-weight:900; color:var(--blue)">88 <span style="color:var(--red)">SERVICE</span></h1>
-            <button id="logoutBtn" class="btn" style="width: auto; background: var(--red);">Logout</button>
+    <div id="panel" class="hidden">
+        <header>
+            <div class="logo">88 SERVICE</div>
+            <button id="logoutBtn" class="btn" style="width:auto; background:var(--red)">Logout</button>
         </header>
 
-        <div class="grid">
-            <div class="col">
-                <div class="card">
-                    <h3>Update About Info</h3>
-                    <textarea id="about-edit" class="form-input" style="height: 100px;"></textarea>
-                    <button id="save-about" class="btn">Update Site</button>
-                </div>
-
-                <div class="card">
-                    <h3>Add Gallery Item</h3>
-                    <input type="text" id="g-title" placeholder="Project Title" class="form-input">
-                    <textarea id="g-desc" placeholder="Description" class="form-input"></textarea>
-                    <input type="file" id="g-file" class="form-input" accept="image/*">
-                    <button id="add-gallery" class="btn">Upload & Post</button>
-                </div>
-            </div>
-
+        <div style="max-width: 800px; margin: 0 auto;">
             <div class="card">
-                <h3>Client Inquiries</h3>
-                <div id="inquiry-list"></div>
+                <h3>Add to Gallery (GitHub Upload)</h3>
+                <input type="text" id="g-title" placeholder="Project Title" class="form-input">
+                <textarea id="g-desc" placeholder="Project Description" class="form-input"></textarea>
+                
+                <label style="font-weight:bold; font-size:0.8rem">Pick Image:</label>
+                <input type="file" id="g-file" class="form-input" accept="image/*">
+                
+                <button id="add-gallery" class="btn">POST TO GITHUB</button>
+            </div>
+            
+            <div class="card" style="border-top-color: var(--red);">
+                <h3>Company Info</h3>
+                <textarea id="about-edit" class="form-input" style="height:100px"></textarea>
+                <button id="save-about" class="btn">Update About</button>
             </div>
         </div>
     </div>
@@ -57,8 +53,12 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, addDoc, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+        import { getFirestore, doc, setDoc, addDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // --- GITHUB CONFIG ---
+        const GITHUB_TOKEN = "PASTE_YOUR_GITHUB_TOKEN_HERE";
+        const GITHUB_USER = "at88service";
+        const GITHUB_REPO = "at88service.github.io";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAEvwmPsMFa1T6iSxvg6zFoZBd_R55rCQ8",
@@ -72,64 +72,69 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const storage = getStorage(app);
 
-        // --- Auth ---
+        // Auth
         document.getElementById('loginBtn').onclick = () => {
             signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value).catch(e => alert(e.message));
         };
         document.getElementById('logoutBtn').onclick = () => signOut(auth);
-
-        onAuthStateChanged(auth, user => {
-            document.getElementById('panel').classList.toggle('hidden', !user);
-            document.getElementById('login-form').classList.toggle('hidden', !!user);
-            if(user) loadData();
+        onAuthStateChanged(auth, u => {
+            document.getElementById('panel').classList.toggle('hidden', !u);
+            document.getElementById('login-form').classList.toggle('hidden', !!u);
         });
 
-        function loadData() {
-            onSnapshot(doc(db, "content", "about"), d => { if(d.exists()) document.getElementById('about-edit').value = d.data().text; });
-            const q = query(collection(db, "inquiries"), orderBy("timestamp", "desc"));
-            onSnapshot(q, s => {
-                const list = document.getElementById('inquiry-list');
-                list.innerHTML = '';
-                s.forEach(d => {
-                    const data = d.data();
-                    list.innerHTML += `<div class="inquiry-item"><strong>${data.name}</strong><br>${data.message}</div>`;
-                });
-            });
-        }
-
+        // Sync About
+        onSnapshot(doc(db, "content", "about"), d => { if(d.exists()) document.getElementById('about-edit').value = d.data().text; });
         document.getElementById('save-about').onclick = async () => {
             await setDoc(doc(db, "content", "about"), { text: document.getElementById('about-edit').value });
-            alert("Updated!");
+            alert("About info updated!");
         };
 
-        // --- UPLOAD LOGIC ---
+        // --- GITHUB UPLOAD LOGIC ---
         document.getElementById('add-gallery').onclick = async () => {
             const file = document.getElementById('g-file').files[0];
             const title = document.getElementById('g-title').value;
-            if(!file || !title) return alert("Title and Image required!");
+            if(!file || !title) return alert("Missing title or file!");
 
             const btn = document.getElementById('add-gallery');
-            btn.innerText = "Uploading...";
+            btn.innerText = "Committing to GitHub...";
 
             try {
-                // 1. Upload to Firebase Storage
-                const storageRef = ref(storage, 'gallery/' + file.name);
-                const snapshot = await uploadBytes(storageRef, file);
-                const downloadURL = await getDownloadURL(snapshot.ref);
+                // 1. Convert Image to Base64 (Required by GitHub API)
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = async () => {
+                    const base64Content = reader.result.split(',')[1];
+                    const fileName = Date.now() + "_" + file.name;
 
-                // 2. Save to Firestore
-                await addDoc(collection(db, "gallery"), {
-                    title: title,
-                    description: document.getElementById('g-desc').value,
-                    url: downloadURL,
-                    timestamp: Date.now()
-                });
+                    // 2. Send to GitHub API
+                    const ghResponse = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/images/${fileName}`, {
+                        method: "PUT",
+                        headers: {
+                            "Authorization": `token ${GITHUB_TOKEN}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            message: `Add project image: ${title}`,
+                            content: base64Content
+                        })
+                    });
 
-                alert("Gallery Item Live!");
-                location.reload();
-            } catch (e) { alert("Upload failed: " + e.message); }
+                    if(ghResponse.ok) {
+                        // 3. Save Link to Firebase
+                        await addDoc(collection(db, "gallery"), {
+                            title: title,
+                            description: document.getElementById('g-desc').value,
+                            url: `images/${fileName}`,
+                            timestamp: Date.now()
+                        });
+                        alert("Success! File committed to GitHub repository.");
+                        location.reload();
+                    } else {
+                        alert("GitHub API Error. Check token permissions.");
+                    }
+                };
+            } catch (err) { alert("Error: " + err.message); }
         };
     </script>
 </body>
