@@ -3,61 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>88 Admin | Dashboard</title>
+    <title>88 Admin | Control Center</title>
     <style>
-        :root { --blue: #2563eb; --red: #dc2626; --navy: #0f172a; --bg: #f1f5f9; --white: #ffffff; }
-        body { background: var(--bg); font-family: 'Inter', sans-serif; margin: 0; }
-        .header { background: var(--navy); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
-        .grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 2rem; }
-        .card { background: var(--white); border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 2rem; border-top: 4px solid var(--blue); }
-        .form-input { width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; margin-bottom: 10px; }
-        .btn { padding: 0.75rem 1.5rem; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; transition: 0.2s; }
-        .btn-blue { background: var(--blue); color: white; width: 100%; }
-        .btn-red { background: var(--red); color: white; }
-        .manage-item { border-bottom: 1px solid #eee; padding: 10px 0; display: flex; justify-content: space-between; align-items: center; }
-        .preview-img { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; }
+        :root {
+            --blue: #2563eb;
+            --red: #dc2626;
+            --navy: #0f172a;
+            --bg: #f8fafc;
+            --white: #ffffff;
+        }
+
+        body { background: var(--bg); font-family: 'Inter', sans-serif; margin: 0; padding: 20px; color: var(--navy); }
         .hidden { display: none !important; }
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        /* Card Styling */
+        .card { background: var(--white); padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 25px; border-top: 5px solid var(--blue); }
+        .card-red { border-top-color: var(--red); }
+
+        /* Inputs & Buttons */
+        .form-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 1rem; outline: none; }
+        .form-input:focus { border-color: var(--blue); }
+        .btn { background: var(--blue); color: white; padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; }
+        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
+        .btn-red { background: var(--red); }
+
+        /* Layout Grid */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+
+        /* Inquiries & Items */
+        .list-item { padding: 15px; background: #f1f5f9; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid var(--red); display: flex; gap: 15px; align-items: center; }
+        .img-preview-small { width: 60px; height: 60px; border-radius: 8px; background: #cbd5e1; object-fit: cover; }
+        
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .logo { font-weight: 900; font-size: 1.8rem; background: linear-gradient(135deg, var(--blue), var(--red)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     </style>
 </head>
 <body>
 
-    <div id="login-form" style="max-width: 400px; margin: 100px auto;" class="card">
-        <h2 style="text-align:center">88 <span style="color:var(--red)">ADMIN</span></h2>
-        <input type="email" id="email" placeholder="Email" class="form-input">
+    <div id="login-form" class="card" style="max-width: 400px; margin: 100px auto;">
+        <div class="logo" style="text-align: center; margin-bottom: 20px;">88 ADMIN</div>
+        <input type="email" id="email" placeholder="Admin Email" class="form-input">
         <input type="password" id="pass" placeholder="Password" class="form-input">
-        <button id="loginBtn" class="btn btn-blue">Login</button>
+        <button id="loginBtn" class="btn">Login to Panel</button>
     </div>
 
-    <div id="panel" class="hidden">
-        <header class="header">
-            <h1 style="margin:0">88 ADMIN</h1>
-            <button id="logoutBtn" class="btn btn-red">Logout</button>
+    <div id="panel" class="hidden container">
+        <header>
+            <div class="logo">88 SERVICE</div>
+            <div>
+                <button onclick="localStorage.removeItem('gh_token'); location.reload();" class="btn" style="width:auto; margin-right:10px; background:#64748b">Reset Token</button>
+                <button id="logoutBtn" class="btn btn-red" style="width: auto;">Logout</button>
+            </div>
         </header>
-        <div class="container grid">
+
+        <div class="grid">
             <div class="col">
                 <div class="card">
-                    <h3>About Text</h3>
-                    <textarea id="about-edit" class="form-input" style="height:100px"></textarea>
-                    <button id="save-about" class="btn btn-blue">Update About</button>
+                    <h3>Update Company Profile</h3>
+                    <textarea id="about-edit" class="form-input" style="height: 100px;"></textarea>
+                    <button id="save-about" class="btn">Update About Section</button>
                 </div>
+
                 <div class="card">
-                    <h3>New Image Link</h3>
-                    <input type="text" id="g-title" placeholder="Title" class="form-input">
-                    <input type="text" id="g-url" placeholder="Image URL" class="form-input">
-                    <textarea id="g-desc" placeholder="Description" class="form-input"></textarea>
-                    <label><input type="checkbox" id="g-hero"> Add to Slider</label>
-                    <button id="add-gallery" class="btn btn-blue" style="margin-top:10px">Post Image</button>
+                    <h3>Add Gallery Item</h3>
+                    <input type="text" id="g-title" placeholder="Project Title" class="form-input">
+                    <textarea id="g-desc" placeholder="Project Description" class="form-input"></textarea>
+                    <input type="file" id="g-file" class="form-input" accept="image/*">
+                    <button id="add-gallery" class="btn">Commit to GitHub</button>
                 </div>
             </div>
+
             <div class="col">
-                <div class="card">
-                    <h3>Live Content</h3>
-                    <div id="live-list"></div>
-                </div>
-                <div class="card">
-                    <h3>Inquiries</h3>
+                <div class="card card-red">
+                    <h3>Recent Inquiries</h3>
                     <div id="inquiry-list"></div>
+                </div>
+                
+                <div class="card">
+                    <h3>Current Gallery</h3>
+                    <div id="admin-gallery-list"></div>
                 </div>
             </div>
         </div>
@@ -66,8 +92,9 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, addDoc, collection, query, orderBy, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+        // --- CONFIG ---
         const firebaseConfig = {
             apiKey: "AIzaSyAEvwmPsMFa1T6iSxvg6zFoZBd_R55rCQ8",
             authDomain: "service-6327f.firebaseapp.com",
@@ -77,68 +104,102 @@
             appId: "1:331161362655:web:aa7cfbb45f83c1c8de096a"
         };
 
+        const GITHUB_USER = "at88service";
+        const GITHUB_REPO = "at88service.github.io";
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // --- AUTH & TOKEN LOGIC ---
         document.getElementById('loginBtn').onclick = () => {
-            signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value).catch(e => alert(e.message));
+            const e = document.getElementById('email').value, p = document.getElementById('pass').value;
+            signInWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
         };
         document.getElementById('logoutBtn').onclick = () => signOut(auth);
 
         onAuthStateChanged(auth, user => {
+            document.getElementById('panel').classList.toggle('hidden', !user);
+            document.getElementById('login-form').classList.toggle('hidden', !!user);
             if(user) {
-                document.getElementById('panel').classList.remove('hidden');
-                document.getElementById('login-form').classList.add('hidden');
+                if(!localStorage.getItem('gh_token')) {
+                    const t = prompt("Enter GitHub Personal Access Token (PAT):");
+                    if(t) localStorage.setItem('gh_token', t);
+                }
                 loadData();
-            } else {
-                document.getElementById('panel').classList.add('hidden');
-                document.getElementById('login-form').classList.remove('hidden');
             }
         });
 
+        // --- DATA SYNC ---
         function loadData() {
             onSnapshot(doc(db, "content", "about"), d => { if(d.exists()) document.getElementById('about-edit').value = d.data().text; });
             
-            onSnapshot(query(collection(db, "gallery"), orderBy("timestamp", "desc")), s => {
-                const list = document.getElementById('live-list');
-                list.innerHTML = '';
-                s.forEach(d => {
-                    const data = d.data();
-                    list.innerHTML += `<div class="manage-item">
-                        <img src="${data.url}" class="preview-img">
-                        <span>${data.title}</span>
-                        <button class="btn btn-red" onclick="window.del('${d.id}')">Del</button>
-                    </div>`;
-                });
-            });
-
+            // Inquiries
             onSnapshot(query(collection(db, "inquiries"), orderBy("timestamp", "desc")), s => {
                 const list = document.getElementById('inquiry-list');
                 list.innerHTML = '';
                 s.forEach(d => {
-                    list.innerHTML += `<div class="manage-item">
-                        <div><strong>${d.data().name}</strong>: ${d.data().message}</div>
-                        <button class="btn btn-red" onclick="window.delInq('${d.id}')">X</button>
+                    const data = d.data();
+                    list.innerHTML += `<div class="list-item"><div><strong>${data.name}</strong><br><small>${data.message}</small></div></div>`;
+                });
+            });
+
+            // Gallery Preview
+            onSnapshot(query(collection(db, "gallery"), orderBy("timestamp", "desc")), s => {
+                const list = document.getElementById('admin-gallery-list');
+                list.innerHTML = '';
+                s.forEach(d => {
+                    const data = d.data();
+                    list.innerHTML += `<div class="list-item">
+                        <img src="${data.url}" class="img-preview-small" onerror="this.src='https://placehold.co/60x60?text=Pending'">
+                        <div><strong>${data.title}</strong></div>
                     </div>`;
                 });
             });
         }
 
-        window.del = id => deleteDoc(doc(db, "gallery", id));
-        window.delInq = id => deleteDoc(doc(db, "inquiries", id));
+        // --- ACTIONS ---
+        document.getElementById('save-about').onclick = async () => {
+            await setDoc(doc(db, "content", "about"), { text: document.getElementById('about-edit').value });
+            alert("Site updated!");
+        };
 
-        document.getElementById('save-about').onclick = () => setDoc(doc(db, "content", "about"), { text: document.getElementById('about-edit').value });
-        
         document.getElementById('add-gallery').onclick = async () => {
-            await addDoc(collection(db, "gallery"), {
-                title: document.getElementById('g-title').value,
-                url: document.getElementById('g-url').value,
-                description: document.getElementById('g-desc').value,
-                isHero: document.getElementById('g-hero').checked,
-                timestamp: Date.now()
-            });
-            alert("Posted!");
+            const token = localStorage.getItem('gh_token');
+            const file = document.getElementById('g-file').files[0];
+            const title = document.getElementById('g-title').value;
+            
+            if(!token || !file || !title) return alert("Fill all fields and ensure Token is set.");
+
+            const btn = document.getElementById('add-gallery');
+            btn.innerText = "Pushing to GitHub...";
+
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = async () => {
+                const base64Content = reader.result.split(',')[1];
+                const fileName = Date.now() + "_" + file.name.replace(/\s/g, '_');
+
+                try {
+                    const res = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/images/${fileName}`, {
+                        method: "PUT",
+                        headers: { "Authorization": `token ${token}`, "Content-Type": "application/json" },
+                        body: JSON.stringify({ message: `Add ${title}`, content: base64Content })
+                    });
+
+                    if(!res.ok) throw new Error("GitHub rejected upload. Check token.");
+
+                    await addDoc(collection(db, "gallery"), {
+                        title: title,
+                        description: document.getElementById('g-desc').value,
+                        url: `images/${fileName}`,
+                        timestamp: Date.now()
+                    });
+
+                    alert("Successfully committed! Image will appear in ~60 seconds.");
+                    location.reload();
+                } catch(err) { alert(err.message); btn.innerText = "Commit to GitHub"; }
+            };
         };
     </script>
 </body>
