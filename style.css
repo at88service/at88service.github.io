@@ -16,10 +16,9 @@ body { margin: 0; background-color: var(--slate-50); color: var(--navy); overflo
 
 /* Footer Styles */
 .main-footer {
-    background-color: #0f172a;;
     padding: 80px 2rem 40px;
     border-top: 1px solid var(--slate-300);
-    color: white;
+    color: black;
 }
 
 .footer-inner {
@@ -36,7 +35,7 @@ body { margin: 0; background-color: var(--slate-50); color: var(--navy); overflo
 
 .footer-brand p {
     margin-top: 1.5rem;
-    color: white;
+    color: black;
     max-width: 300px;
     line-height: 1.6;
 }
@@ -47,14 +46,14 @@ body { margin: 0; background-color: var(--slate-50); color: var(--navy); overflo
     letter-spacing: 1px;
     font-size: 0.8rem;
     margin-bottom: 1.5rem;
-    color: white;
+    color: black;
 }
 
 .footer-links a,
 .footer-contact a {
     display: block;
     text-decoration: none;
-    color: white;
+    color: black;
     margin-bottom: 0.8rem;
     font-weight: 500;
     transition: color 0.3s;
