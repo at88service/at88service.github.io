@@ -4,44 +4,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>88 Service | Admin Panel</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/x-icon" href="/path/to/your/icon.ico">
+    <style>
+        :root {
+            --bg-navy: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --red-600: #dc2626;
+            --white: #ffffff;
+        }
+        body { background: var(--bg-navy); color: var(--white); font-family: sans-serif; padding: 20px; margin: 0; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .hidden { display: none !important; }
+        
+        /* Form & Input Styles */
+        .card { background: var(--slate-800); padding: 2rem; border-radius: 1rem; border: 1px solid rgba(220, 38, 38, 0.2); margin-bottom: 2rem; }
+        .form-input { 
+            width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; 
+            border: 1px solid var(--slate-700); background: var(--bg-navy); color: white; box-sizing: border-box;
+        }
+        .btn-red { 
+            background: var(--red-600); color: white; padding: 12px 24px; border: none; 
+            border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s;
+        }
+        .btn-red:hover { opacity: 0.8; }
+        
+        /* Layout */
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+        
+        /* Inquiry List */
+        .inquiry-card { 
+            background: var(--slate-700); padding: 15px; border-radius: 10px; 
+            border-left: 4px solid var(--red-600); margin-bottom: 10px; 
+        }
+        .inquiry-meta { display: flex; justify-content: space-between; font-size: 0.8rem; color: #cbd5e1; margin-bottom: 5px; }
+        .red-text { color: var(--red-600); }
+    </style>
 </head>
-<body class="bg-navy text-white p-8">
-    
-    <div id="login-form" class="max-w-md mx-auto mt-20 p-8 bg-slate-800 rounded-2xl border border-red-600/30">
-        <h2 class="text-2xl font-bold mb-6 text-center">88 <span class="text-red-600">Admin</span></h2>
-        <input type="email" id="email" placeholder="Email" class="form-input mb-4">
-        <input type="password" id="pass" placeholder="Password" class="form-input mb-6">
-        <button onclick="login()" class="btn-red w-full">Login</button>
+<body>
+
+    <div id="login-form" class="card" style="max-width: 400px; margin: 100px auto;">
+        <h2 style="text-align: center;">88 <span class="red-text">Admin</span></h2>
+        <input type="email" id="email" placeholder="Email" class="form-input">
+        <input type="password" id="pass" placeholder="Password" class="form-input">
+        <button onclick="login()" class="btn-red">Login</button>
     </div>
 
-    <div id="panel" class="hidden max-w-6xl mx-auto">
-        <header class="flex justify-between items-center mb-12">
-            <h1 class="text-3xl font-black">Control <span class="text-red-600">88</span></h1>
-            <button onclick="logout()" class="text-slate-400">Logout</button>
+    <div id="panel" class="hidden container">
+        <header>
+            <h1>Control <span class="red-text">88</span></h1>
+            <button onclick="logout()" style="background:none; border:none; color:#94a3b8; cursor:pointer;">Logout</button>
         </header>
 
-        <div class="grid md:grid-cols-2 gap-8">
-            <div class="space-y-8">
-                <div class="bg-slate-800 p-6 rounded-2xl border border-white/5 shadow-xl">
-                    <h3 class="font-bold mb-4 text-blue-400 uppercase text-xs tracking-widest">Company Info</h3>
-                    <textarea id="about-input" class="form-input h-32 mb-4" placeholder="Update company about info..."></textarea>
-                    <button id="save-about" class="btn-red py-2 px-6">Update About</button>
+        <div class="grid">
+            <div class="left-col">
+                <div class="card">
+                    <h3 style="font-size: 12px; text-transform: uppercase; color: #60a5fa;">Company Info</h3>
+                    <textarea id="about-input" class="form-input" style="height: 100px;" placeholder="Update company about info..."></textarea>
+                    <button id="save-about" class="btn-red" style="width: auto;">Update About</button>
                 </div>
 
-                <div class="bg-slate-800 p-6 rounded-2xl border border-white/5 shadow-xl">
-                    <h3 class="font-bold mb-4 text-blue-400 uppercase text-xs tracking-widest">Add Gallery Item</h3>
-                    <input type="text" id="g-title" placeholder="Project Title" class="form-input mb-2">
-                    <input type="text" id="g-url" placeholder="Direct Image URL" class="form-input mb-2">
-                    <textarea id="g-desc" placeholder="Project Description" class="form-input mb-4 h-24"></textarea>
-                    <button id="add-item" class="btn-red w-full">Post to Gallery</button>
+                <div class="card">
+                    <h3 style="font-size: 12px; text-transform: uppercase; color: #60a5fa;">Add Gallery Item</h3>
+                    <input type="text" id="g-title" placeholder="Project Title" class="form-input">
+                    <input type="text" id="g-url" placeholder="Direct Image URL" class="form-input">
+                    <textarea id="g-desc" placeholder="Project Description" class="form-input" style="height: 80px;"></textarea>
+                    <button id="add-item" class="btn-red">Post to Gallery</button>
                 </div>
             </div>
 
-            <div class="bg-slate-800 p-6 rounded-2xl border border-white/5 shadow-xl">
-                <h3 class="font-bold mb-6 text-red-600 uppercase text-xs tracking-widest">Client Requests</h3>
-                <div id="inquiry-list" class="space-y-4 max-h-[600px] overflow-y-auto pr-2">
+            <div class="card">
+                <h3 style="font-size: 12px; text-transform: uppercase; color: var(--red-600);">Client Requests</h3>
+                <div id="inquiry-list" style="max-height: 500px; overflow-y: auto;">
                     </div>
             </div>
         </div>
@@ -52,57 +87,70 @@
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, addDoc, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-     const firebaseConfig = {
-        apiKey: "AIzaSyAEvwmPsMFa1T6iSxvg6zFoZBd_R55rCQ8",
-        authDomain: "service-6327f.firebaseapp.com",
-        projectId: "service-6327f", // Make sure this is NOT "88web"
-        storageBucket: "service-6327f.firebasestorage.app", // Fixed the 't' typo here
-        messagingSenderId: "331161362655",
-        appId: "1:331161362655:web:aa7cfbb45f83c1c8de096a",
-        measurementId: "G-ESBERML5HJ"
-};
+        const firebaseConfig = {
+            apiKey: "AIzaSyAEvwmPsMFa1T6iSxvg6zFoZBd_R55rCQ8",
+            authDomain: "service-6327f.firebaseapp.com",
+            projectId: "service-6327f",
+            storageBucket: "service-6327f.firebasestorage.app",
+            messagingSenderId: "331161362655",
+            appId: "1:331161362655:web:aa7cfbb45f83c1c8de096a"
+        };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        window.login = () => signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value).catch(a => alert(a.message));
+        // Global functions for buttons
+        window.login = () => {
+            const e = document.getElementById('email').value;
+            const p = document.getElementById('pass').value;
+            signInWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
+        };
         window.logout = () => signOut(auth);
 
+        // Auth State Toggle
         onAuthStateChanged(auth, user => {
             const p = document.getElementById('panel'), l = document.getElementById('login-form');
             if(user) { p.classList.remove('hidden'); l.classList.add('hidden'); }
             else { p.classList.add('hidden'); l.classList.remove('hidden'); }
         });
 
+        // Update About
         document.getElementById('save-about').onclick = async () => {
             const text = document.getElementById('about-input').value;
-            await setDoc(doc(db, "content", "about"), { text });
-            alert("About Info Updated!");
+            try {
+                await setDoc(doc(db, "content", "about"), { text });
+                alert("About Info Updated!");
+            } catch(e) { alert("Error: No permission"); }
         };
 
+        // Add Gallery Item
         document.getElementById('add-item').onclick = async () => {
-            await addDoc(collection(db, "gallery"), { 
-                title: document.getElementById('g-title').value, 
-                url: document.getElementById('g-url').value, 
-                description: document.getElementById('g-desc').value,
-                timestamp: Date.now()
-            });
-            alert("Gallery Item Added!");
-            document.getElementById('g-title').value = '';
-            document.getElementById('g-url').value = '';
-            document.getElementById('g-desc').value = '';
+            try {
+                await addDoc(collection(db, "gallery"), { 
+                    title: document.getElementById('g-title').value, 
+                    url: document.getElementById('g-url').value, 
+                    description: document.getElementById('g-desc').value,
+                    timestamp: Date.now()
+                });
+                alert("Gallery Item Added!");
+                document.getElementById('g-title').value = '';
+                document.getElementById('g-url').value = '';
+                document.getElementById('g-desc').value = '';
+            } catch(e) { alert("Error: No permission"); }
         };
 
+        // Real-time Inquiries
         const q = query(collection(db, "inquiries"), orderBy("timestamp", "desc"));
         onSnapshot(q, s => {
             const list = document.getElementById('inquiry-list');
             list.innerHTML = '';
             s.forEach(d => {
                 const data = d.data();
-                list.innerHTML += `<div class="bg-slate-700 p-4 rounded-xl border-l-4 border-red-600 animate-slide">
-                    <div class="flex justify-between text-xs mb-2"><strong>${data.name}</strong><span class="text-slate-400">${data.email}</span></div>
-                    <p class="text-sm text-slate-200">${data.message}</p>
+                list.innerHTML += `
+                <div class="inquiry-card">
+                    <div class="inquiry-meta"><strong>${data.name || 'Anonymous'}</strong><span>${data.email || ''}</span></div>
+                    <p style="margin:0; font-size:0.9rem;">${data.message || 'No message'}</p>
                 </div>`;
             });
         });
