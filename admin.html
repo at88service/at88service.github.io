@@ -3,88 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>88 Admin | Control Center</title>
+    <title>88 Admin | GitHub Live</title>
     <style>
-        :root {
-            --blue: #2563eb;
-            --red: #dc2626;
-            --navy: #0f172a;
-            --bg: #f8fafc;
-            --white: #ffffff;
-        }
-
-        body { background: var(--bg); font-family: 'Inter', sans-serif; margin: 0; padding: 20px; color: var(--navy); }
+        :root { --blue: #2563eb; --red: #dc2626; --navy: #0f172a; --bg: #f8fafc; }
+        body { background: var(--bg); font-family: sans-serif; padding: 20px; }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 25px; border-top: 5px solid var(--blue); }
+        .form-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; }
+        .btn { background: var(--blue); color: white; padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
         .hidden { display: none !important; }
-        .container { max-width: 1200px; margin: 0 auto; }
-
-        /* Card Styling */
-        .card { background: var(--white); padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 25px; border-top: 5px solid var(--blue); }
-        .card-red { border-top-color: var(--red); }
-
-        /* Inputs & Buttons */
-        .form-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 1rem; outline: none; }
-        .form-input:focus { border-color: var(--blue); }
-        .btn { background: var(--blue); color: white; padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; }
-        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
-        .btn-red { background: var(--red); }
-
-        /* Layout Grid */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
-        @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
-
-        /* Inquiry List */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; max-width: 1200px; margin: 0 auto; }
         .inquiry-item { padding: 15px; background: #f1f5f9; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid var(--red); }
-        .inquiry-meta { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: bold; margin-bottom: 5px; }
-        
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .logo { font-weight: 900; font-size: 1.8rem; background: linear-gradient(135deg, var(--blue), var(--red)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        /* Image Preview */
-        #img-preview { width: 100%; height: 150px; object-fit: cover; border-radius: 10px; margin-top: 10px; display: none; background: #eee; }
     </style>
 </head>
 <body>
 
-    <div id="login-form" class="card" style="max-width: 400px; margin: 100px auto;">
-        <div class="logo" style="text-align: center; margin-bottom: 20px;">88 ADMIN</div>
-        <input type="email" id="email" placeholder="Admin Email" class="form-input">
+    <div id="login-form" class="card" style="max-width: 400px; margin: 100px auto; text-align: center;">
+        <h2 style="font-weight:900">88 <span style="color:var(--red)">ADMIN</span></h2>
+        <input type="email" id="email" placeholder="Email" class="form-input">
         <input type="password" id="pass" placeholder="Password" class="form-input">
-        <button id="loginBtn" class="btn">Login to Panel</button>
+        <button id="loginBtn" class="btn">Login</button>
     </div>
 
     <div id="panel" class="hidden container">
-        <header>
-            <div class="logo">88 SERVICE CONTROL</div>
-            <button id="logoutBtn" class="btn btn-red" style="width: auto;">Logout</button>
+        <header style="display:flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto 30px;">
+            <h1 style="font-weight:900; color:var(--blue)">88 <span style="color:var(--red)">SERVICE</span></h1>
+            <button id="logoutBtn" class="btn" style="width: auto; background: var(--red);">Logout</button>
         </header>
 
         <div class="grid">
             <div class="col">
                 <div class="card">
-                    <h3>Company Profile (About Section)</h3>
-                    <textarea id="about-edit" class="form-input" style="height: 120px;" placeholder="Update your company description..."></textarea>
-                    <button id="save-about" class="btn">Update Site Info</button>
+                    <h3>Update About Info</h3>
+                    <textarea id="about-edit" class="form-input" style="height: 100px;"></textarea>
+                    <button id="save-about" class="btn">Update Site</button>
                 </div>
 
                 <div class="card">
-                    <h3>Add New Project to Gallery</h3>
+                    <h3>Add Gallery Item</h3>
                     <input type="text" id="g-title" placeholder="Project Title" class="form-input">
-                    <textarea id="g-desc" placeholder="Project Description" class="form-input"></textarea>
-                    
-                    <label style="font-weight: bold; font-size: 0.8rem;">Select Image File:</label>
+                    <textarea id="g-desc" placeholder="Description" class="form-input"></textarea>
                     <input type="file" id="g-file" class="form-input" accept="image/*">
-                    <img id="img-preview">
-                    
-                    <button id="add-gallery" class="btn" style="margin-top: 15px;">Post Project to Site</button>
+                    <button id="add-gallery" class="btn">Upload & Post</button>
                 </div>
             </div>
 
-            <div class="col">
-                <div class="card card-red">
-                    <h3>Recent Client Inquiries</h3>
-                    <div id="inquiry-list">
-                        </div>
-                </div>
+            <div class="card">
+                <h3>Client Inquiries</h3>
+                <div id="inquiry-list"></div>
             </div>
         </div>
     </div>
@@ -92,7 +57,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, addDoc, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAEvwmPsMFa1T6iSxvg6zFoZBd_R55rCQ8",
@@ -106,104 +72,64 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        const storage = getStorage(app);
 
-        // --- Authentication ---
+        // --- Auth ---
         document.getElementById('loginBtn').onclick = () => {
-            const e = document.getElementById('email').value, p = document.getElementById('pass').value;
-            signInWithEmailAndPassword(auth, e, p).catch(err => alert("Error: " + err.message));
+            signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value).catch(e => alert(e.message));
         };
         document.getElementById('logoutBtn').onclick = () => signOut(auth);
 
         onAuthStateChanged(auth, user => {
             document.getElementById('panel').classList.toggle('hidden', !user);
             document.getElementById('login-form').classList.toggle('hidden', !!user);
-            if(user) syncDashboard();
+            if(user) loadData();
         });
 
-        // --- Image Preview Logic ---
-        document.getElementById('g-file').onchange = (e) => {
-            const [file] = e.target.files;
-            if (file) {
-                const preview = document.getElementById('img-preview');
-                preview.src = URL.createObjectURL(file);
-                preview.style.display = 'block';
-            }
-        };
-
-        // --- Dashboard Sync ---
-        function syncDashboard() {
-            // Fetch About Text
-            onSnapshot(doc(db, "content", "about"), (d) => {
-                if(d.exists()) document.getElementById('about-edit').value = d.data().text;
-            });
-
-            // Fetch Inquiries (Ordered by newest)
+        function loadData() {
+            onSnapshot(doc(db, "content", "about"), d => { if(d.exists()) document.getElementById('about-edit').value = d.data().text; });
             const q = query(collection(db, "inquiries"), orderBy("timestamp", "desc"));
             onSnapshot(q, s => {
                 const list = document.getElementById('inquiry-list');
                 list.innerHTML = '';
                 s.forEach(d => {
                     const data = d.data();
-                    list.innerHTML += `
-                        <div class="inquiry-item">
-                            <div class="inquiry-meta"><span>${data.name}</span><span>${data.email}</span></div>
-                            <div style="font-size:0.9rem; color:#444;">${data.message}</div>
-                        </div>`;
+                    list.innerHTML += `<div class="inquiry-item"><strong>${data.name}</strong><br>${data.message}</div>`;
                 });
             });
         }
 
-        // --- Actions ---
         document.getElementById('save-about').onclick = async () => {
             await setDoc(doc(db, "content", "about"), { text: document.getElementById('about-edit').value });
-            alert("Company Info Updated!");
+            alert("Updated!");
         };
 
+        // --- UPLOAD LOGIC ---
         document.getElementById('add-gallery').onclick = async () => {
-            const fileInput = document.getElementById('g-file');
-            const file = fileInput.files[0];
+            const file = document.getElementById('g-file').files[0];
             const title = document.getElementById('g-title').value;
-            const desc = document.getElementById('g-desc').value;
-
-            if(!file || !title) return alert("Title and Image are required!");
+            if(!file || !title) return alert("Title and Image required!");
 
             const btn = document.getElementById('add-gallery');
-            btn.innerText = "Processing...";
+            btn.innerText = "Uploading...";
 
             try {
-                // 1. Upload file to your LOCAL Node.js server
-                const formData = new FormData();
-                formData.append('image', file);
+                // 1. Upload to Firebase Storage
+                const storageRef = ref(storage, 'gallery/' + file.name);
+                const snapshot = await uploadBytes(storageRef, file);
+                const downloadURL = await getDownloadURL(snapshot.ref);
 
-                const response = await fetch('http://localhost:3001/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                if(!response.ok) throw new Error("Local server not running");
-                const uploadData = await response.json();
-
-                // 2. Save project data to Firebase Firestore
+                // 2. Save to Firestore
                 await addDoc(collection(db, "gallery"), {
                     title: title,
-                    description: desc,
-                    url: uploadData.url, // Path: 'images/filename.jpg'
+                    description: document.getElementById('g-desc').value,
+                    url: downloadURL,
                     timestamp: Date.now()
                 });
 
-                alert("Successfully saved to local folder and posted!");
-                
-                // Reset Form
-                fileInput.value = '';
-                document.getElementById('g-title').value = '';
-                document.getElementById('g-desc').value = '';
-                document.getElementById('img-preview').style.display = 'none';
-
-            } catch (err) {
-                alert("Upload failed! Make sure you ran 'node server.js' in your terminal.");
-            } finally {
-                btn.innerText = "Post Project to Site";
-            }
+                alert("Gallery Item Live!");
+                location.reload();
+            } catch (e) { alert("Upload failed: " + e.message); }
         };
     </script>
 </body>
