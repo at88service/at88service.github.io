@@ -3,75 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>88 Service | Excellence Redefined</title>
-    <link rel="stylesheet" href="style.css">
+    <title>88 Service | Premium Excellence</title>
+    <style>
+        :root { --navy: #0f172a; --blue: #2563eb; --red: #dc2626; --white: #ffffff; --slate-50: #f8fafc; }
+        html { scroll-behavior: smooth; font-family: 'Inter', sans-serif; }
+        body { margin: 0; background: var(--slate-50); color: var(--navy); overflow-x: hidden; }
+
+        .logo-88 { font-weight: 900; font-size: 2.5rem; background: linear-gradient(135deg, var(--blue), var(--red)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -2px; }
+
+        .glass-nav { position: fixed; width: 100%; top: 0; z-index: 1000; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
+        .nav-inner { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+
+        .hero-slider { height: 85vh; width: 100%; overflow: hidden; position: relative; margin-top: 70px; }
+        .slider-track { display: flex; width: 300%; height: 100%; animation: slideHero 12s infinite ease-in-out; }
+        .slide { width: 33.333%; height: 100%; background-size: cover; background-position: center; }
+        .slide-overlay { background: rgba(15, 23, 42, 0.5); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white; }
+
+        @keyframes slideHero { 0%, 25% { transform: translateX(0); } 33%, 58% { transform: translateX(-33.333%); } 66%, 91% { transform: translateX(-66.666%); } 100% { transform: translateX(0); } }
+
+        .section { padding: 100px 2rem; max-width: 1200px; margin: 0 auto; }
+        .gallery-block { display: flex; align-items: center; gap: 4rem; margin-bottom: 6rem; flex-direction: row; }
+        .gallery-block.reverse { flex-direction: row-reverse; }
+        .gallery-img { flex: 1; border-radius: 30px; overflow: hidden; height: 450px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .gallery-img img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
+        .gallery-img img:hover { transform: scale(1.05); }
+        .gallery-text { flex: 1; }
+
+        .contact-card { background: var(--navy); color: white; border-radius: 40px; padding: 4rem; text-align: center; }
+        .form-input { width: 100%; padding: 1.2rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: white; margin-bottom: 1.5rem; box-sizing: border-box; }
+        .btn-red { background: var(--red); color: white; padding: 1.2rem; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; width: 100%; transition: 0.3s; }
+    </style>
 </head>
 <body>
 
-    <nav class="glass-nav">
-        <div class="nav-inner">
-            <div class="logo-88">88</div>
-            <div class="nav-links">
-                <a href="#about">About</a>
-                <a href="#gallery">Gallery</a>
-                <a href="#contact">Contact</a>
-            </div>
-        </div>
-    </nav>
+    <nav class="glass-nav"><div class="nav-inner"><div class="logo-88">88</div></div></nav>
 
     <header class="hero-slider">
         <div class="slider-track">
-            <div class="slide" style="background-image: url('images/slide1.jpg')">
-                <div class="slide-overlay"><div class="hero-text"><h1>PRECISION</h1></div></div>
-            </div>
-            <div class="slide" style="background-image: url('images/slide2.jpg')">
-                <div class="slide-overlay"><div class="hero-text"><h1>EXECUTION</h1></div></div>
-            </div>
-            <div class="slide" style="background-image: url('images/slide3.jpg')">
-                <div class="slide-overlay"><div class="hero-text"><h1>88 QUALITY</h1></div></div>
-            </div>
+            <div class="slide" style="background-image: url('images/slide1.jpg')"><div class="slide-overlay"><h1 style="font-size: 6rem;">PRECISION</h1></div></div>
+            <div class="slide" style="background-image: url('images/slide2.jpg')"><div class="slide-overlay"><h1 style="font-size: 6rem;">QUALITY</h1></div></div>
+            <div class="slide" style="background-image: url('images/slide3.jpg')"><div class="slide-overlay"><h1 style="font-size: 6rem;">EXECUTION</h1></div></div>
         </div>
     </header>
 
-    <section id="about" class="section-padding">
-        <div class="about-grid">
-            <div>
-                <span class="section-tag">Brand Story</span>
-                <h2 style="font-size: 3.5rem; margin: 1rem 0;">The 88 Standard</h2>
-                <p id="about-text" class="about-text">Loading information...</p>
-            </div>
-            <div class="gallery-img-wrapper" style="height: 400px;">
-                <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800">
-            </div>
-        </div>
+    <section id="about" class="section">
+        <h2 style="font-size: 3rem;">About <span style="color:var(--blue)">88 Service</span></h2>
+        <p id="about-text" style="font-size: 1.2rem; line-height: 1.8; color: var(--slate-600); border-left: 4px solid var(--red); padding-left: 2rem;">Loading...</p>
     </section>
 
-    <section id="gallery" style="background: #f1f5f9; width: 100%;">
-        <div class="section-padding">
-            <h2 style="text-align: center; font-size: 3rem; margin-bottom: 4rem;">Portfolio <span style="color:var(--blue)">Excellence</span></h2>
-            <div id="gallery-list"></div>
-        </div>
+    <section id="gallery" class="section">
+        <div id="gallery-list"></div>
     </section>
 
-    <section id="contact" class="section-padding">
+    <section class="section">
         <div class="contact-card">
-            <h2 style="text-align: center; font-size: 3rem; margin-bottom: 3rem;">Start a <span style="color:var(--red)">Project</span></h2>
-            <form id="contactForm" class="contact-form">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                    <input type="text" id="cName" placeholder="Name" class="form-input" required>
-                    <input type="email" id="cEmail" placeholder="Email" class="form-input" required>
-                </div>
-                <textarea id="cMsg" rows="5" placeholder="Tell us about your project..." class="form-input" required></textarea>
-                <button type="submit" class="btn-red">SEND INQUIRY</button>
+            <h2>Work with <span style="color:var(--red)">88</span></h2>
+            <form id="contactForm">
+                <input type="text" id="cName" placeholder="Name" class="form-input" required>
+                <input type="email" id="cEmail" placeholder="Email" class="form-input" required>
+                <textarea id="cMsg" placeholder="Project details..." class="form-input" style="height:100px" required></textarea>
+                <button type="submit" class="btn-red">SEND REQUEST</button>
             </form>
         </div>
     </section>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, onSnapshot, collection, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // CONFIG (Replace with your actual keys from the previous step)
         const firebaseConfig = {
             apiKey: "AIzaSyAEvwmPsMFa1T6iSxvg6zFoZBd_R55rCQ8",
             authDomain: "service-6327f.firebaseapp.com",
@@ -84,9 +83,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        onSnapshot(doc(db, "content", "about"), (d) => {
-            if(d.exists()) document.getElementById('about-text').innerText = d.data().text;
-        });
+        onSnapshot(doc(db, "content", "about"), (d) => { if(d.exists()) document.getElementById('about-text').innerText = d.data().text; });
 
         const q = query(collection(db, "gallery"), orderBy("timestamp", "desc"));
         onSnapshot(q, snap => {
@@ -95,27 +92,17 @@
             snap.docs.forEach((d, i) => {
                 const item = d.data();
                 const rev = i % 2 !== 0 ? 'reverse' : '';
-                list.innerHTML += `
-                    <div class="gallery-block ${rev}">
-                        <div class="gallery-img-wrapper"><img src="${item.url}"></div>
-                        <div class="gallery-content">
-                            <h3>${item.title}</h3>
-                            <p style="font-size: 1.2rem; color: var(--slate-600);">${item.description}</p>
-                        </div>
-                    </div>`;
+                list.innerHTML += `<div class="gallery-block ${rev}">
+                    <div class="gallery-img"><img src="${item.url}" onerror="this.src='https://via.placeholder.com/600x400'"></div>
+                    <div class="gallery-text"><h2>${item.title}</h2><p>${item.description}</p></div>
+                </div>`;
             });
         });
 
         document.getElementById('contactForm').onsubmit = async (e) => {
             e.preventDefault();
-            await addDoc(collection(db, "inquiries"), {
-                name: document.getElementById('cName').value,
-                email: document.getElementById('cEmail').value,
-                message: document.getElementById('cMsg').value,
-                timestamp: serverTimestamp()
-            });
-            alert("Message Sent!");
-            e.target.reset();
+            await addDoc(collection(db, "inquiries"), { name: document.getElementById('cName').value, email: document.getElementById('cEmail').value, message: document.getElementById('cMsg').value, timestamp: serverTimestamp() });
+            alert("Sent!"); e.target.reset();
         };
     </script>
 </body>

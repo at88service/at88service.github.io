@@ -5,21 +5,20 @@
     <title>88 Admin | Control Panel</title>
     <style>
         :root { --blue: #2563eb; --red: #dc2626; --bg: #0f172a; --card: #ffffff; }
-        body { background: var(--bg); font-family: sans-serif; padding: 40px; }
-        .card { background: var(--card); padding: 30px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); max-width: 800px; margin: 0 auto 30px; }
-        .input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        .btn { background: var(--blue); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
-        .btn:disabled { background: #94a3b8; cursor: not-allowed; }
+        body { background: var(--bg); font-family: 'Inter', sans-serif; padding: 40px; margin: 0; }
+        .card { background: var(--card); padding: 30px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); max-width: 800px; margin: 0 auto 30px; border-top: 6px solid var(--blue); }
+        .input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
+        .btn { background: var(--blue); color: white; border: none; padding: 14px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; }
+        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
         .btn-red { background: var(--red); }
         .hidden { display: none; }
-        #progress-container { width: 100%; background: #eee; height: 10px; border-radius: 5px; margin: 10px 0; display: none; }
-        #progress-bar { width: 0%; background: var(--blue); height: 100%; border-radius: 5px; transition: width 0.3s; }
+        .inquiry-item { padding: 15px; border-bottom: 1px solid #eee; color: #334155; }
     </style>
 </head>
 <body>
 
-    <div id="login-form" class="card" style="max-width: 400px;">
-        <h2 style="text-align: center;">88 <span style="color:var(--red)">Admin</span></h2>
+    <div id="login-form" class="card" style="max-width: 400px; margin-top: 100px;">
+        <h2 style="text-align: center; margin-top: 0;">88 <span style="color:var(--red)">Admin</span></h2>
         <input type="email" id="email" placeholder="Email" class="input">
         <input type="password" id="pass" placeholder="Password" class="input">
         <button id="loginBtn" class="btn">Login</button>
@@ -27,29 +26,26 @@
 
     <div id="panel" class="hidden">
         <div class="card">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h2>About Company</h2>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+                <h2 style="margin:0;">Dashboard</h2>
                 <button id="logoutBtn" class="btn btn-red" style="width:auto">Logout</button>
             </div>
-            <textarea id="about-edit" class="input" style="height: 150px;"></textarea>
-            <button id="save-about" class="btn">Update About Info</button>
+            <label>Update About Us Text</label>
+            <textarea id="about-edit" class="input" style="height: 120px;"></textarea>
+            <button id="save-about" class="btn">Update Company Profile</button>
         </div>
 
-        <div class="card">
-            <h2>Add Gallery Project</h2>
+        <div class="card" style="border-top-color: var(--red);">
+            <h2>Add New Project</h2>
             <input type="text" id="g-title" placeholder="Project Name" class="input">
-            
-            <label style="font-size: 14px; font-weight: bold;">Select Image File:</label>
-            <input type="file" id="g-file" class="input" accept="image/*">
-            
-            <div id="progress-container"><div id="progress-bar"></div></div>
-
-            <textarea id="g-desc" placeholder="Project Details" class="input" style="height: 80px;"></textarea>
-            <button id="add-gallery" class="btn">Upload & Post Project</button>
+            <input type="text" id="g-filename" placeholder="Filename (e.g. project1.jpg)" class="input">
+            <textarea id="g-desc" placeholder="Project Description" class="input" style="height: 80px;"></textarea>
+            <button id="add-gallery" class="btn btn-red">Post to Website</button>
+            <p style="font-size: 0.8rem; color: #64748b; margin-top: 10px;">Note: You must manually upload the image to your <b>/images</b> folder in GitHub.</p>
         </div>
 
         <div class="card">
-            <h2 style="color: var(--red)">Recent Inquiries</h2>
+            <h2 style="color: var(--red)">Recent Client Inquiries</h2>
             <div id="inquiry-list"></div>
         </div>
     </div>
@@ -58,8 +54,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, addDoc, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        // NEW: Storage Imports
-        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAEvwmPsMFa1T6iSxvg6zFoZBd_R55rCQ8",
@@ -69,12 +63,12 @@
             messagingSenderId: "331161362655",
             appId: "1:331161362655:web:aa7cfbb45f83c1c8de096a"
         };
-        
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const storage = getStorage(app);
 
+        // Auth
         document.getElementById('loginBtn').onclick = () => {
             signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value).catch(e => alert(e.message));
         };
@@ -83,66 +77,33 @@
         onAuthStateChanged(auth, user => {
             document.getElementById('panel').classList.toggle('hidden', !user);
             document.getElementById('login-form').classList.toggle('hidden', !!user);
+            if(user) {
+                onSnapshot(doc(db, "content", "about"), (d) => { if(d.exists()) document.getElementById('about-edit').value = d.data().text; });
+                const q = query(collection(db, "inquiries"), orderBy("timestamp", "desc"));
+                onSnapshot(q, s => {
+                    const list = document.getElementById('inquiry-list');
+                    list.innerHTML = '';
+                    s.forEach(d => { list.innerHTML += `<div class="inquiry-item"><strong>${d.data().name}</strong>: ${d.data().message}</div>`; });
+                });
+            }
         });
 
+        // Save Data
         document.getElementById('save-about').onclick = async () => {
             await setDoc(doc(db, "content", "about"), { text: document.getElementById('about-edit').value });
             alert("Updated!");
         };
 
-        // NEW: Upload Logic
         document.getElementById('add-gallery').onclick = async () => {
-            const file = document.getElementById('g-file').files[0];
-            const title = document.getElementById('g-title').value;
-            const desc = document.getElementById('g-desc').value;
-            const btn = document.getElementById('add-gallery');
-
-            if (!file || !title) return alert("Please select a file and enter a title.");
-
-            btn.disabled = true;
-            document.getElementById('progress-container').style.display = 'block';
-
-            // 1. Create storage reference
-            const storageRef = ref(storage, 'images/' + Date.now() + "_" + file.name);
-            const uploadTask = uploadBytesResumable(storageRef, file);
-
-            uploadTask.on('state_changed', 
-                (snapshot) => {
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    document.getElementById('progress-bar').style.width = progress + '%';
-                }, 
-                (error) => { alert("Upload failed: " + error.message); btn.disabled = false; }, 
-                async () => {
-                    // 2. Get the URL after upload finished
-                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                    
-                    // 3. Save to Firestore
-                    await addDoc(collection(db, "gallery"), {
-                        title: title,
-                        url: downloadURL,
-                        description: desc,
-                        timestamp: Date.now()
-                    });
-
-                    alert("Project Live with Image!");
-                    btn.disabled = false;
-                    document.getElementById('progress-container').style.display = 'none';
-                    document.getElementById('g-file').value = '';
-                    document.getElementById('g-title').value = '';
-                    document.getElementById('g-desc').value = '';
-                }
-            );
-        };
-
-        const q = query(collection(db, "inquiries"), orderBy("timestamp", "desc"));
-        onSnapshot(q, s => {
-            const list = document.getElementById('inquiry-list');
-            list.innerHTML = '';
-            s.forEach(d => {
-                const data = d.data();
-                list.innerHTML += `<div style="padding:15px; border-bottom:1px solid #eee"><strong>${data.name}</strong> (${data.email}): ${data.message}</div>`;
+            const file = document.getElementById('g-filename').value;
+            await addDoc(collection(db, "gallery"), {
+                title: document.getElementById('g-title').value,
+                url: `images/${file}`,
+                description: document.getElementById('g-desc').value,
+                timestamp: Date.now()
             });
-        });
+            alert("Saved! Now upload " + file + " to your GitHub /images folder.");
+        };
     </script>
 </body>
 </html>
