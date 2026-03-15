@@ -19,22 +19,20 @@
         .hidden { display: none !important; }
         .container { max-width: 1200px; margin: 0 auto; }
 
-        /* Card Styling */
         .card { background: var(--white); padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 25px; border-top: 5px solid var(--blue); }
         .card-red { border-top-color: var(--red); }
 
-        /* Inputs & Buttons */
         .form-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 1rem; outline: none; }
         .form-input:focus { border-color: var(--blue); }
+        
         .btn { background: var(--blue); color: white; padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; }
         .btn:hover { opacity: 0.9; transform: translateY(-2px); }
         .btn-red { background: var(--red); }
+        .btn-outline { background: transparent; color: var(--slate-600); border: 1px solid #ddd; width: auto; padding: 5px 10px; font-size: 0.8rem; }
 
-        /* Layout Grid */
         .grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 25px; }
         @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
 
-        /* Inquiry & Gallery Items */
         .list-item { padding: 15px; background: #f1f5f9; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid var(--blue); display: flex; gap: 15px; align-items: flex-start; }
         .inquiry-item { border-left-color: var(--red); flex-direction: column; }
         .inquiry-meta { display: flex; justify-content: space-between; width: 100%; font-weight: bold; margin-bottom: 5px; }
@@ -56,10 +54,7 @@
     <div id="panel" class="hidden container">
         <header>
             <div class="logo">88 SERVICE</div>
-            <div>
-                <button onclick="localStorage.removeItem('gh_token'); location.reload();" class="btn" style="width:auto; margin-right:10px; background:#64748b">Reset Token</button>
-                <button id="logoutBtn" class="btn btn-red" style="width: auto;">Logout</button>
-            </div>
+            <button id="logoutBtn" class="btn btn-red" style="width: auto;">Logout</button>
         </header>
 
         <div class="grid">
@@ -71,11 +66,12 @@
                 </div>
 
                 <div class="card">
-                    <h3>Add Gallery Project</h3>
+                    <h3>Add Project via Link</h3>
                     <input type="text" id="g-title" placeholder="Project Title" class="form-input">
+                    <input type="text" id="g-url" placeholder="Direct Image URL (e.g. https://...)" class="form-input">
                     <textarea id="g-desc" placeholder="Project Description" class="form-input"></textarea>
-                    <input type="file" id="g-file" class="form-input" accept="image/*">
-                    <button id="add-gallery" class="btn">Commit to GitHub Repository</button>
+                    <label style="display:block; margin: 10px 0;"><input type="checkbox" id="g-hero"> Feature in Hero Slider</label>
+                    <button id="add-gallery" class="btn">Publish Project</button>
                 </div>
             </div>
 
@@ -86,7 +82,7 @@
                 </div>
                 
                 <div class="card">
-                    <h3>Active Gallery</h3>
+                    <h3>Manage Gallery</h3>
                     <div id="admin-gallery-list" style="max-height: 400px; overflow-y: auto;"></div>
                 </div>
             </div>
@@ -96,7 +92,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, query, orderBy, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAEvwmPsMFa1T6iSxvg6zFoZBd_R55rCQ8",
@@ -107,14 +103,11 @@
             appId: "1:331161362655:web:aa7cfbb45f83c1c8de096a"
         };
 
-        const GITHUB_USER = "at88service";
-        const GITHUB_REPO = "at88service.github.io";
-
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- AUTH & TOKEN ---
+        // --- AUTH ---
         document.getElementById('loginBtn').onclick = () => {
             const e = document.getElementById('email').value, p = document.getElementById('pass').value;
             signInWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
@@ -124,21 +117,12 @@
         onAuthStateChanged(auth, user => {
             document.getElementById('panel').classList.toggle('hidden', !user);
             document.getElementById('login-form').classList.toggle('hidden', !!user);
-            if(user) {
-                if(!localStorage.getItem('gh_token')) {
-                    const t = prompt("Security: Enter GitHub Personal Access Token (PAT):");
-                    if(t) localStorage.setItem('gh_token', t);
-                }
-                loadDashboardData();
-            }
+            if(user) loadDashboardData();
         });
 
-        // --- LOAD DASHBOARD ---
         function loadDashboardData() {
-            // Load About
             onSnapshot(doc(db, "content", "about"), d => { if(d.exists()) document.getElementById('about-edit').value = d.data().text; });
             
-            // Load Inquiries with Email Display
             onSnapshot(query(collection(db, "inquiries"), orderBy("timestamp", "desc")), s => {
                 const list = document.getElementById('inquiry-list');
                 list.innerHTML = '';
@@ -149,15 +133,14 @@
                         <div class="list-item inquiry-item">
                             <div class="inquiry-meta">
                                 <span>${data.name}</span>
-                                <span style="color:var(--blue); font-weight:normal;">${data.email || ''}</span>
+                                <button class="btn-outline" onclick="window.delInq('${d.id}')">Delete</button>
                             </div>
                             <div style="font-size:0.9rem; color:var(--slate-600); margin:5px 0;">${data.message}</div>
-                            <div style="font-size:0.7rem; color:var(--slate-400); text-align:right;">${time}</div>
+                            <div style="font-size:0.7rem; color:var(--slate-400);">${data.email || ''} | ${time}</div>
                         </div>`;
                 });
             });
 
-            // Load Gallery Items
             onSnapshot(query(collection(db, "gallery"), orderBy("timestamp", "desc")), s => {
                 const list = document.getElementById('admin-gallery-list');
                 list.innerHTML = '';
@@ -165,58 +148,42 @@
                     const data = d.data();
                     list.innerHTML += `
                         <div class="list-item">
-                            <img src="${data.url}" class="img-preview-small" onerror="this.src='https://placehold.co/60x60?text=Wait'">
-                            <div><strong>${data.title}</strong></div>
+                            <img src="${data.url}" class="img-preview-small" onerror="this.src='https://placehold.co/60x60?text=Error'">
+                            <div style="flex-grow:1">
+                                <strong>${data.title}</strong> ${data.isHero ? '⭐' : ''}
+                            </div>
+                            <button class="btn-outline" style="color:var(--red)" onclick="window.delGal('${d.id}')">Remove</button>
                         </div>`;
                 });
             });
         }
 
-        // --- ACTIONS ---
+        // --- GLOBAL ACTIONS ---
+        window.delInq = async (id) => { if(confirm("Delete inquiry?")) await deleteDoc(doc(db, "inquiries", id)); };
+        window.delGal = async (id) => { if(confirm("Remove project?")) await deleteDoc(doc(db, "gallery", id)); };
+
         document.getElementById('save-about').onclick = async () => {
             await setDoc(doc(db, "content", "about"), { text: document.getElementById('about-edit').value });
-            alert("Site Profile Updated!");
+            alert("Updated!");
         };
 
         document.getElementById('add-gallery').onclick = async () => {
-            const token = localStorage.getItem('gh_token');
-            const file = document.getElementById('g-file').files[0];
             const title = document.getElementById('g-title').value;
-            
-            if(!token || !file || !title) return alert("Fill all project details and ensure Token is provided.");
+            const url = document.getElementById('g-url').value;
+            const desc = document.getElementById('g-desc').value;
+            const isHero = document.getElementById('g-hero').checked;
 
-            const btn = document.getElementById('add-gallery');
-            btn.innerText = "Pushing to GitHub...";
+            if(!title || !url) return alert("Title and Image URL required.");
 
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = async () => {
-                const base64Content = reader.result.split(',')[1];
-                const fileName = Date.now() + "_" + file.name.replace(/\s/g, '_');
-
-                try {
-                    const res = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/images/${fileName}`, {
-                        method: "PUT",
-                        headers: { "Authorization": `token ${token}`, "Content-Type": "application/json" },
-                        body: JSON.stringify({ message: `Gallery Upload: ${title}`, content: base64Content })
-                    });
-
-                    if(!res.ok) throw new Error("GitHub rejected the request. Please check your Token permissions.");
-
-                    await addDoc(collection(db, "gallery"), {
-                        title: title,
-                        description: document.getElementById('g-desc').value,
-                        url: `images/${fileName}`,
-                        timestamp: Date.now()
-                    });
-
-                    alert("Project Live! Image will be visible on site shortly.");
-                    location.reload();
-                } catch(err) { 
-                    alert(err.message); 
-                    btn.innerText = "Commit to GitHub Repository"; 
-                }
-            };
+            try {
+                await addDoc(collection(db, "gallery"), {
+                    title, url, description: desc, isHero, timestamp: Date.now()
+                });
+                alert("Project Published!");
+                document.getElementById('g-title').value = '';
+                document.getElementById('g-url').value = '';
+                document.getElementById('g-desc').value = '';
+            } catch(err) { alert(err.message); }
         };
     </script>
 </body>
