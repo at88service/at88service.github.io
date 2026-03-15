@@ -2,127 +2,96 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>88 Admin | Blue & Red</title>
+    <title>88 Admin | Control Panel</title>
     <style>
-        :root { --blue: #2563eb; --red: #dc2626; --bg: #f8fafc; --card: #ffffff; }
-        body { background: var(--bg); font-family: sans-serif; margin: 0; padding: 20px; }
-        .card { background: var(--card); padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 30px; border-top: 5px solid var(--blue); }
-        .form-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; }
-        .btn { background: var(--blue); color: white; padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        :root { --blue: #2563eb; --red: #dc2626; --bg: #0f172a; --card: #ffffff; }
+        body { background: var(--bg); font-family: sans-serif; padding: 40px; }
+        .card { background: var(--card); padding: 30px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); max-width: 800px; margin: 0 auto 30px; }
+        .input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .btn { background: var(--blue); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
         .btn-red { background: var(--red); }
         .hidden { display: none; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1200px; margin: 0 auto; }
     </style>
 </head>
 <body>
 
-    <div id="login-form" class="card" style="max-width: 400px; margin: 100px auto;">
-        <h2 style="text-align:center">88 <span style="color:var(--red)">Admin</span></h2>
-        <input type="email" id="email" placeholder="Admin Email" class="form-input">
-        <input type="password" id="pass" placeholder="Password" class="form-input">
-        <button id="loginBtn" class="btn" style="width:100%">Enter Panel</button>
+    <div id="login-form" class="card" style="max-width: 400px;">
+        <h2 style="text-align: center;">88 <span style="color:var(--red)">Admin</span></h2>
+        <input type="email" id="email" placeholder="Email" class="input">
+        <input type="password" id="pass" placeholder="Password" class="input">
+        <button id="loginBtn" class="btn">Login</button>
     </div>
 
     <div id="panel" class="hidden">
-        <header style="display:flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto 30px;">
-            <h1 style="color:var(--blue)">88 Control <span style="color:var(--red)">Panel</span></h1>
-            <button id="logoutBtn" class="btn btn-red">Logout</button>
-        </header>
-
-        <div class="grid">
-            <div class="col">
-                <div class="card">
-                    <h3>Company Profile (About)</h3>
-                    <textarea id="about-edit" class="form-input" style="height: 150px;"></textarea>
-                    <button id="save-about" class="btn">Update Company Info</button>
-                </div>
-
-                <div class="card">
-                    <h3>Add Gallery Item</h3>
-                    <input type="text" id="g-title" placeholder="Project Name" class="form-input">
-                    <input type="text" id="g-url" placeholder="Filename (e.g. build1.jpg)" class="form-input">
-                    <textarea id="g-desc" placeholder="Brief Description" class="form-input"></textarea>
-                    <button id="add-gallery" class="btn">Upload to Public Site</button>
-                </div>
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h2>About Company</h2>
+                <button id="logoutBtn" class="btn btn-red" style="width:auto">Logout</button>
             </div>
+            <textarea id="about-edit" class="input" style="height: 150px;"></textarea>
+            <button id="save-about" class="btn">Update About Info</button>
+        </div>
 
-            <div class="col">
-                <div class="card" style="border-top-color: var(--red);">
-                    <h3>New Inquiries</h3>
-                    <div id="inquiry-list"></div>
-                </div>
-            </div>
+        <div class="card">
+            <h2>Add Gallery Project</h2>
+            <input type="text" id="g-title" placeholder="Project Name" class="input">
+            <input type="text" id="g-url" placeholder="Image Filename (e.g. car1.jpg)" class="input">
+            <textarea id="g-desc" placeholder="Project Details" class="input" style="height: 80px;"></textarea>
+            <button id="add-gallery" class="btn">Post Project</button>
+        </div>
+
+        <div class="card">
+            <h2 style="color: var(--red)">Recent Inquiries</h2>
+            <div id="inquiry-list"></div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, addDoc, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAEvwmPsMFa1T6iSxvg6zFoZBd_R55rCQ8",
-            authDomain: "service-6327f.firebaseapp.com",
-            projectId: "service-6327f",
-            storageBucket: "service-6327f.firebasestorage.app",
-            messagingSenderId: "331161362655",
-            appId: "1:331161362655:web:aa7cfbb45f83c1c8de096a"
-        };
-
+        // Use the same Firebase config as above...
+        const firebaseConfig = { /* SAME AS ABOVE */ };
+        
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Login/Logout
         document.getElementById('loginBtn').onclick = () => {
-            signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value)
-                .catch(e => alert(e.message));
+            signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value).catch(e => alert(e.message));
         };
         document.getElementById('logoutBtn').onclick = () => signOut(auth);
 
         onAuthStateChanged(auth, user => {
             document.getElementById('panel').classList.toggle('hidden', !user);
             document.getElementById('login-form').classList.toggle('hidden', !!user);
-            if(user) loadData();
         });
 
-        function loadData() {
-            // Load About
-            onSnapshot(doc(db, "content", "about"), (d) => {
-                if(d.exists()) document.getElementById('about-edit').value = d.data().text;
-            });
-
-            // Load Inquiries
-            const q = query(collection(db, "inquiries"), orderBy("timestamp", "desc"));
-            onSnapshot(q, s => {
-                const list = document.getElementById('inquiry-list');
-                list.innerHTML = '';
-                s.forEach(d => {
-                    const data = d.data();
-                    list.innerHTML += `<div style="padding:15px; background:#f1f5f9; border-radius:10px; margin-bottom:10px; border-left:4px solid var(--red)">
-                        <strong>${data.name}</strong> (${data.email})<br><small>${data.message}</small>
-                    </div>`;
-                });
-            });
-        }
-
-        // Save About
         document.getElementById('save-about').onclick = async () => {
             await setDoc(doc(db, "content", "about"), { text: document.getElementById('about-edit').value });
-            alert("Profile Updated!");
+            alert("Updated!");
         };
 
-        // Add Gallery
         document.getElementById('add-gallery').onclick = async () => {
-            const fileName = document.getElementById('g-url').value;
             await addDoc(collection(db, "gallery"), {
                 title: document.getElementById('g-title').value,
-                url: `images/${fileName}`,
+                url: `/images/${document.getElementById('g-url').value}`,
                 description: document.getElementById('g-desc').value,
                 timestamp: Date.now()
             });
             alert("Gallery Item Live!");
         };
+
+        const q = query(collection(db, "inquiries"), orderBy("timestamp", "desc"));
+        onSnapshot(q, s => {
+            const list = document.getElementById('inquiry-list');
+            list.innerHTML = '';
+            s.forEach(d => {
+                const data = d.data();
+                list.innerHTML += `<div style="padding:15px; border-bottom:1px solid #eee"><strong>${data.name}</strong>: ${data.message}</div>`;
+            });
+        });
     </script>
 </body>
 </html>

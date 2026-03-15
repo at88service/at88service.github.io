@@ -3,105 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>88 Service | Premium Excellence</title>
-    <style>
-        :root {
-            --blue: #2563eb;
-            --red: #dc2626;
-            --navy: #0f172a;
-            --white: #ffffff;
-            --gray: #f8fafc;
-        }
-
-        html { scroll-behavior: smooth; font-family: 'Inter', sans-serif; }
-        body { margin: 0; background: var(--white); color: var(--navy); overflow-x: hidden; }
-
-        /* Nasty 88 Logo */
-        .logo-88 {
-            font-weight: 900; font-size: 2.5rem;
-            background: linear-gradient(135deg, var(--blue), var(--red));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.1));
-        }
-
-        nav {
-            position: fixed; width: 100%; top: 0; z-index: 1000;
-            background: rgba(255,255,255,0.8); backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
-        .nav-inner { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-
-        /* Sliding Header */
-        .hero-slider {
-            height: 80vh; width: 100%; overflow: hidden; position: relative; margin-top: 60px;
-        }
-        .slider-track {
-            display: flex; width: 300%; height: 100%;
-            animation: slideHero 15s infinite ease-in-out;
-        }
-        .slide { 
-            width: 100.33%; height: 100%; background-size: cover; background-position: center;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .slide-overlay { background: rgba(0,0,0,0.4); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
-        .hero-text { color: white; text-align: center; }
-        .hero-text h1 { font-size: 5rem; margin: 0; font-weight: 900; letter-spacing: -2px; }
-
-        @keyframes slideHero {
-            0%, 20% { transform: translateX(0); }
-            33%, 53% { transform: translateX(-33.33%); }
-            66%, 86% { transform: translateX(-66.66%); }
-            100% { transform: translateX(0); }
-        }
-
-        /* About Section */
-        .about-section { padding: 100px 2rem; max-width: 900px; margin: 0 auto; text-align: center; }
-        .about-section h2 { font-size: 3rem; color: var(--blue); margin-bottom: 2rem; }
-        .about-text { font-size: 1.25rem; line-height: 1.8; color: var(--slate-600); border-left: 5px solid var(--red); padding-left: 2rem; text-align: left; }
-
-        /* Gallery Grid */
-        .gallery-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 20px; padding: 50px 2rem; max-width: 1200px; margin: 0 auto;
-        }
-        .gallery-item {
-            position: relative; border-radius: 15px; overflow: hidden; height: 300px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: 0.4s;
-        }
-        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
-        .gallery-item:hover { transform: translateY(-10px); }
-        .gallery-item:hover img { transform: scale(1.1); }
-        .item-overlay {
-            position: absolute; bottom: 0; left: 0; right: 0; padding: 20px;
-            background: linear-gradient(transparent, rgba(15,23,42,0.9));
-            color: white; opacity: 0; transition: 0.3s;
-        }
-        .gallery-item:hover .item-overlay { opacity: 1; }
-
-        /* Contact Form */
-        .contact-wrap { background: var(--navy); padding: 80px 2rem; color: white; border-radius: 50px 50px 0 0; }
-        .contact-form { max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px; }
-        .contact-form input, .contact-form textarea {
-            padding: 1.2rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(255,255,255,0.05); color: white; font-size: 1rem;
-        }
-        .btn-submit {
-            background: var(--blue); color: white; padding: 1.2rem; border-radius: 10px;
-            border: none; font-weight: 800; cursor: pointer; transition: 0.3s;
-        }
-        .btn-submit:hover { background: var(--red); transform: scale(1.02); }
-
-    </style>
+    <title>88 Service | Excellence Redefined</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <nav>
+    <nav class="glass-nav">
         <div class="nav-inner">
             <div class="logo-88">88</div>
-            <div style="display:flex; gap: 2rem; font-weight: 700;">
-                <a href="#about" style="text-decoration:none; color:var(--navy)">About</a>
-                <a href="#gallery" style="text-decoration:none; color:var(--navy)">Gallery</a>
-                <a href="#contact" style="text-decoration:none; color:var(--navy)">Contact</a>
+            <div class="nav-links">
+                <a href="#about">About</a>
+                <a href="#gallery">Gallery</a>
+                <a href="#contact">Contact</a>
             </div>
         </div>
     </nav>
@@ -120,33 +33,45 @@
         </div>
     </header>
 
-    <section id="about" class="about-section">
-        <span style="color:var(--red); font-weight: 800; text-transform: uppercase;">Since 2026</span>
-        <h2>The 88 Standard</h2>
-        <div id="about-display" class="about-text">Loading company profile...</div>
+    <section id="about" class="section-padding">
+        <div class="about-grid">
+            <div>
+                <span class="section-tag">Brand Story</span>
+                <h2 style="font-size: 3.5rem; margin: 1rem 0;">The 88 Standard</h2>
+                <p id="about-text" class="about-text">Loading information...</p>
+            </div>
+            <div class="gallery-img-wrapper" style="height: 400px;">
+                <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800">
+            </div>
+        </div>
     </section>
 
-    <section id="gallery">
-        <h2 style="text-align: center; font-size: 2.5rem;">Recent <span style="color:var(--blue)">Works</span></h2>
-        <div id="gallery-grid" class="gallery-grid"></div>
+    <section id="gallery" style="background: #f1f5f9; width: 100%;">
+        <div class="section-padding">
+            <h2 style="text-align: center; font-size: 3rem; margin-bottom: 4rem;">Portfolio <span style="color:var(--blue)">Excellence</span></h2>
+            <div id="gallery-list"></div>
+        </div>
     </section>
 
-    <footer id="contact" class="contact-wrap">
-        <div class="contact-form">
-            <h2 style="text-align: center; margin-bottom: 2rem;">Get in <span style="color:var(--red)">Touch</span></h2>
-            <form id="publicInquiry">
-                <input type="text" id="cName" placeholder="Full Name" required>
-                <input type="email" id="cEmail" placeholder="Email" required>
-                <textarea id="cMsg" rows="5" placeholder="Project details..." required></textarea>
-                <button type="submit" class="btn-submit">START PROJECT</button>
+    <section id="contact" class="section-padding">
+        <div class="contact-card">
+            <h2 style="text-align: center; font-size: 3rem; margin-bottom: 3rem;">Start a <span style="color:var(--red)">Project</span></h2>
+            <form id="contactForm" class="contact-form">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <input type="text" id="cName" placeholder="Name" class="form-input" required>
+                    <input type="email" id="cEmail" placeholder="Email" class="form-input" required>
+                </div>
+                <textarea id="cMsg" rows="5" placeholder="Tell us about your project..." class="form-input" required></textarea>
+                <button type="submit" class="btn-red">SEND INQUIRY</button>
             </form>
         </div>
-    </footer>
+    </section>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+        // CONFIG (Replace with your actual keys from the previous step)
         const firebaseConfig = {
             apiKey: "AIzaSyAEvwmPsMFa1T6iSxvg6zFoZBd_R55rCQ8",
             authDomain: "service-6327f.firebaseapp.com",
@@ -159,31 +84,29 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Fetch About Text
         onSnapshot(doc(db, "content", "about"), (d) => {
-            if(d.exists()) document.getElementById('about-display').innerText = d.data().text;
+            if(d.exists()) document.getElementById('about-text').innerText = d.data().text;
         });
 
-        // Fetch Gallery
         const q = query(collection(db, "gallery"), orderBy("timestamp", "desc"));
         onSnapshot(q, snap => {
-            const grid = document.getElementById('gallery-grid');
-            grid.innerHTML = '';
-            snap.docs.forEach(d => {
+            const list = document.getElementById('gallery-list');
+            list.innerHTML = '';
+            snap.docs.forEach((d, i) => {
                 const item = d.data();
-                grid.innerHTML += `
-                    <div class="gallery-item">
-                        <img src="${item.url}" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Missing'">
-                        <div class="item-overlay">
+                const rev = i % 2 !== 0 ? 'reverse' : '';
+                list.innerHTML += `
+                    <div class="gallery-block ${rev}">
+                        <div class="gallery-img-wrapper"><img src="${item.url}"></div>
+                        <div class="gallery-content">
                             <h3>${item.title}</h3>
-                            <p>${item.description}</p>
+                            <p style="font-size: 1.2rem; color: var(--slate-600);">${item.description}</p>
                         </div>
                     </div>`;
             });
         });
 
-        // Submit Inquiry
-        document.getElementById('publicInquiry').onsubmit = async (e) => {
+        document.getElementById('contactForm').onsubmit = async (e) => {
             e.preventDefault();
             await addDoc(collection(db, "inquiries"), {
                 name: document.getElementById('cName').value,
@@ -191,7 +114,7 @@
                 message: document.getElementById('cMsg').value,
                 timestamp: serverTimestamp()
             });
-            alert("Sent! We will contact you shortly.");
+            alert("Message Sent!");
             e.target.reset();
         };
     </script>
