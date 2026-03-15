@@ -38,6 +38,9 @@
         
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         .logo { font-weight: 900; font-size: 1.8rem; background: linear-gradient(135deg, var(--blue), var(--red)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* Image Preview */
+        #img-preview { width: 100%; height: 150px; object-fit: cover; border-radius: 10px; margin-top: 10px; display: none; background: #eee; }
     </style>
 </head>
 <body>
@@ -51,33 +54,34 @@
 
     <div id="panel" class="hidden container">
         <header>
-            <div class="logo">88 SERVICE</div>
+            <div class="logo">88 SERVICE CONTROL</div>
             <button id="logoutBtn" class="btn btn-red" style="width: auto;">Logout</button>
         </header>
 
         <div class="grid">
             <div class="col">
                 <div class="card">
-                    <h3>Update Company Info (About)</h3>
-                    <textarea id="about-edit" class="form-input" style="height: 150px;" placeholder="Describe your company..."></textarea>
-                    <button id="save-about" class="btn">Update About Section</button>
+                    <h3>Company Profile (About Section)</h3>
+                    <textarea id="about-edit" class="form-input" style="height: 120px;" placeholder="Update your company description..."></textarea>
+                    <button id="save-about" class="btn">Update Site Info</button>
                 </div>
 
                 <div class="card">
-                    <h3>Add Gallery Project</h3>
-                    <input type="text" id="g-title" placeholder="Project Name" class="form-input">
-                    <textarea id="g-desc" placeholder="Brief project description" class="form-input"></textarea>
+                    <h3>Add New Project to Gallery</h3>
+                    <input type="text" id="g-title" placeholder="Project Title" class="form-input">
+                    <textarea id="g-desc" placeholder="Project Description" class="form-input"></textarea>
                     
-                    <label style="font-weight: bold; font-size: 0.8rem;">Select Image (Saves to /images):</label>
-                    <input type="file" id="g-file" class="form-input">
+                    <label style="font-weight: bold; font-size: 0.8rem;">Select Image File:</label>
+                    <input type="file" id="g-file" class="form-input" accept="image/*">
+                    <img id="img-preview">
                     
-                    <button id="add-gallery" class="btn">Post Project to Site</button>
+                    <button id="add-gallery" class="btn" style="margin-top: 15px;">Post Project to Site</button>
                 </div>
             </div>
 
             <div class="col">
                 <div class="card card-red">
-                    <h3>Client Inquiries</h3>
+                    <h3>Recent Client Inquiries</h3>
                     <div id="inquiry-list">
                         </div>
                 </div>
@@ -103,27 +107,37 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- AUTH LOGIC ---
+        // --- Authentication ---
         document.getElementById('loginBtn').onclick = () => {
             const e = document.getElementById('email').value, p = document.getElementById('pass').value;
-            signInWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
+            signInWithEmailAndPassword(auth, e, p).catch(err => alert("Error: " + err.message));
         };
         document.getElementById('logoutBtn').onclick = () => signOut(auth);
 
         onAuthStateChanged(auth, user => {
             document.getElementById('panel').classList.toggle('hidden', !user);
             document.getElementById('login-form').classList.toggle('hidden', !!user);
-            if(user) loadDashboard();
+            if(user) syncDashboard();
         });
 
-        // --- DASHBOARD LOGIC ---
-        function loadDashboard() {
-            // Load About Info
+        // --- Image Preview Logic ---
+        document.getElementById('g-file').onchange = (e) => {
+            const [file] = e.target.files;
+            if (file) {
+                const preview = document.getElementById('img-preview');
+                preview.src = URL.createObjectURL(file);
+                preview.style.display = 'block';
+            }
+        };
+
+        // --- Dashboard Sync ---
+        function syncDashboard() {
+            // Fetch About Text
             onSnapshot(doc(db, "content", "about"), (d) => {
                 if(d.exists()) document.getElementById('about-edit').value = d.data().text;
             });
 
-            // Load Inquiries (Real-time)
+            // Fetch Inquiries (Ordered by newest)
             const q = query(collection(db, "inquiries"), orderBy("timestamp", "desc"));
             onSnapshot(q, s => {
                 const list = document.getElementById('inquiry-list');
@@ -133,32 +147,31 @@
                     list.innerHTML += `
                         <div class="inquiry-item">
                             <div class="inquiry-meta"><span>${data.name}</span><span>${data.email}</span></div>
-                            <div style="font-size:0.9rem">${data.message}</div>
+                            <div style="font-size:0.9rem; color:#444;">${data.message}</div>
                         </div>`;
                 });
             });
         }
 
-        // --- UPDATE ABOUT ---
+        // --- Actions ---
         document.getElementById('save-about').onclick = async () => {
             await setDoc(doc(db, "content", "about"), { text: document.getElementById('about-edit').value });
             alert("Company Info Updated!");
         };
 
-        // --- ADD GALLERY & UPLOAD TO LOCAL /IMAGES ---
         document.getElementById('add-gallery').onclick = async () => {
             const fileInput = document.getElementById('g-file');
             const file = fileInput.files[0];
             const title = document.getElementById('g-title').value;
             const desc = document.getElementById('g-desc').value;
 
-            if(!file || !title) return alert("Fill in title and choose a file!");
+            if(!file || !title) return alert("Title and Image are required!");
 
             const btn = document.getElementById('add-gallery');
-            btn.innerText = "Uploading...";
+            btn.innerText = "Processing...";
 
             try {
-                // 1. Upload file to Local Node.js Server
+                // 1. Upload file to your LOCAL Node.js server
                 const formData = new FormData();
                 formData.append('image', file);
 
@@ -166,20 +179,26 @@
                     method: 'POST',
                     body: formData
                 });
+                
+                if(!response.ok) throw new Error("Local server not running");
                 const uploadData = await response.json();
 
-                // 2. Save Link to Firebase Firestore
+                // 2. Save project data to Firebase Firestore
                 await addDoc(collection(db, "gallery"), {
                     title: title,
                     description: desc,
-                    url: uploadData.url, // Points to /images/filename.jpg
+                    url: uploadData.url, // Path: 'images/filename.jpg'
                     timestamp: Date.now()
                 });
 
-                alert("Successfully saved to /images and Gallery!");
+                alert("Successfully saved to local folder and posted!");
+                
+                // Reset Form
                 fileInput.value = '';
                 document.getElementById('g-title').value = '';
                 document.getElementById('g-desc').value = '';
+                document.getElementById('img-preview').style.display = 'none';
+
             } catch (err) {
                 alert("Upload failed! Make sure you ran 'node server.js' in your terminal.");
             } finally {
