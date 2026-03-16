@@ -6,26 +6,38 @@
     <title>88 Service | Premium Solutions</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .lang-switch { display: flex; gap: 10px; margin-left: 20px; align-items: center; }
+        /* Language Switcher Styling */
+        .lang-switch { display: flex; gap: 8px; margin-left: 20px; align-items: center; }
         .lang-btn { 
-            background: none; border: 1px solid rgba(0,0,0,0.2); 
-            color: #000; cursor: pointer; padding: 4px 10px; font-size: 0.75rem;
+            background: none; border: 1px solid rgba(0,0,0,0.1); 
+            color: #000; cursor: pointer; padding: 4px 8px; font-size: 0.7rem;
             border-radius: 4px; transition: 0.3s; font-weight: bold;
         }
         .lang-btn.active { background: var(--red, #dc2626); border-color: var(--red, #dc2626); color: white; }
-        /* Ensure slider is visible */
-        .hero-slider { overflow: hidden; width: 100%; height: 80vh; background: #000; }
-        .slider-track { display: flex; height: 100%; transition: transform 0.5s ease; }
-        .slide { flex-shrink: 0; height: 100%; background-size: cover; background-position: center; position: relative; }
-        .slide-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; }
-        .hero-text h1 { color: white; font-size: 4rem; text-align: center; }
+
+        /* Logo Slogan Styling */
+        .logo-container { display: flex; flex-direction: column; align-items: center; line-height: 1; text-decoration: none; color: inherit; }
+        .logo-slogan { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; font-weight: 400; }
+        
+        .glass-nav .logo-slogan { color: rgba(0, 0, 0, 0.7); }
+        .main-footer .logo-slogan { color: var(--red, #dc2626); }
+
+        /* Slider visibility fixes */
+        .hero-slider { overflow: hidden; width: 100%; height: 85vh; background: #000; position: relative; }
+        .slider-track { display: flex; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .slide { flex-shrink: 0; width: 100%; height: 100%; background-size: cover; background-position: center; position: relative; }
+        .slide-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; }
+        .hero-text h1 { color: white; font-size: clamp(2rem, 8vw, 4.5rem); text-align: center; font-weight: 900; }
     </style>
 </head>
 <body>
 
 <nav class="glass-nav">
     <div class="nav-inner">
-        <div class="logo-88">88</div>
+        <a href="#" class="logo-container">
+            <div class="logo-88">88</div>
+            <div class="logo-slogan" data-i18n="slogan">Service</div>
+        </a>
         <div class="nav-links">
             <a href="#main-slider" class="nav-item" data-i18n="nav_home">Home</a>
             <a href="#about" class="nav-item" data-i18n="nav_about">About</a>
@@ -47,7 +59,7 @@
 <section id="about" class="section">
     <span class="section-tag" data-i18n="since">Since 2026</span>
     <h2 style="font-size: 3rem; margin: 1rem 0;" data-i18n="about_title">The 88 Standard</h2>
-    <p id="about-text" style="font-size: 1.2rem; line-height: 1.8; border-left: 4px solid var(--red); padding-left: 2rem;">Loading content...</p>
+    <p id="about-text" style="font-size: 1.2rem; line-height: 1.8; border-left: 4px solid var(--red); padding-left: 2rem;">Loading...</p>
 </section>
 
 <section id="gallery" class="section" style="background: #f1f5f9; max-width: 100%;">
@@ -60,10 +72,10 @@
             <h2 style="text-align: center; font-size: 3rem; margin-bottom: 2rem;"><span data-i18n="form_title">START A PROJECT</span> <span style="color:var(--red)">88</span></h2>
             <form id="contactForm">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <input type="text" id="custName" placeholder="Name" class="form-input" required>
-                    <input type="email" id="custEmail" placeholder="Email" class="form-input" required>
+                    <input type="text" id="custName" class="form-input" required>
+                    <input type="email" id="custEmail" class="form-input" required>
                 </div>
-                <textarea id="custMsg" rows="5" placeholder="Project details..." class="form-input" required></textarea>
+                <textarea id="custMsg" rows="5" class="form-input" required></textarea>
                 <button type="submit" id="sendBtn" class="btn-red" data-i18n="form_btn">SEND REQUEST</button>
             </form>
         </div>
@@ -73,7 +85,10 @@
         <div class="footer-inner">
             <div class="footer-top">
                 <div class="footer-brand">
-                    <div class="logo-88">88</div>
+                    <div class="logo-container" style="align-items: flex-start; margin-bottom: 1rem;">
+                        <div class="logo-88">88</div>
+                        <div class="logo-slogan" data-i18n="slogan">Service</div>
+                    </div>
                     <p data-i18n="footer_desc">Elevating standards since 2026. Premium solutions for ambitious projects.</p>
                 </div>
                 <div class="footer-contact">
@@ -108,22 +123,25 @@
         en: {
             nav_home: "Home", nav_about: "About", nav_gallery: "Gallery", nav_contact: "Contact",
             since: "Since 2026", about_title: "The 88 Standard", form_title: "START A PROJECT",
-            form_btn: "SEND REQUEST", footer_desc: "Elevating standards since 2026.",
-            footer_connect: "Connect", footer_rights: "All rights reserved.",
+            form_btn: "SEND REQUEST", footer_desc: "Elevating standards since 2026. Premium solutions for ambitious projects.",
+            footer_connect: "Connect", footer_rights: "All rights reserved.", slogan: "Service",
+            ph_name: "Name", ph_email: "Email", ph_msg: "Project details...",
             msg_wait: "Please wait 1 minute.", msg_sent: "Sent!", msg_err: "Error."
         },
         lv: {
             nav_home: "Sākums", nav_about: "Par mums", nav_gallery: "Galerija", nav_contact: "Kontakti",
             since: "Kopš 2026", about_title: "88 Standarts", form_title: "SĀKT PROJEKTU",
-            form_btn: "SŪTĪT PIETEIKUMU", footer_desc: "Paaugstinām standartus kopš 2026. gada.",
-            footer_connect: "Sazināties", footer_rights: "Visas tiesības aizsargātas.",
+            form_btn: "SŪTĪT PIETEIKUMU", footer_desc: "Paaugstinām standartus kopš 2026. gada. Premium risinājumi ambicioziem projektiem.",
+            footer_connect: "Sazināties", footer_rights: "Visas tiesības aizsargātas.", slogan: "Serviss",
+            ph_name: "Vārds", ph_email: "E-pasts", ph_msg: "Projekta detaļas...",
             msg_wait: "Lūdzu, uzgaidiet 1 minūti.", msg_sent: "Nosūtīts!", msg_err: "Kļūda."
         },
         ru: {
             nav_home: "Главная", nav_about: "О нас", nav_gallery: "Галерея", nav_contact: "Контакты",
             since: "С 2026 года", about_title: "Стандарт 88", form_title: "НАЧАТЬ ПРОЕКТ",
-            form_btn: "ОТПРАВИТЬ ЗАПРОС", footer_desc: "Повышаем стандарты с 2026 года.",
-            footer_connect: "Связаться", footer_rights: "Все права защищены.",
+            form_btn: "ОТПРАВИТЬ ЗАПРОС", footer_desc: "Повышаем стандарты с 2026 года. Премиальные решения для амбициозных проектов.",
+            footer_connect: "Связаться", footer_rights: "Все права защищены.", slogan: "Сервис",
+            ph_name: "Имя", ph_email: "Эл. почта", ph_msg: "Детали проекта...",
             msg_wait: "Пожалуйста, подождите 1 минуту.", msg_sent: "Отправлено!", msg_err: "Ошибка."
         }
     };
@@ -133,8 +151,20 @@
 
     window.changeLang = (lang) => {
         currentLang = lang;
+        
+        // Update Buttons
         document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.innerText.toLowerCase() === lang));
-        document.querySelectorAll('[data-i18n]').forEach(el => el.innerText = translations[lang][el.getAttribute('data-i18n')]);
+        
+        // Update Static Text
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            el.innerText = translations[lang][el.getAttribute('data-i18n')];
+        });
+
+        // Update Placeholders
+        document.getElementById('custName').placeholder = translations[lang].ph_name;
+        document.getElementById('custEmail').placeholder = translations[lang].ph_email;
+        document.getElementById('custMsg').placeholder = translations[lang].ph_msg;
+
         fetchData();
     };
 
@@ -143,7 +173,7 @@
         if(unsubGallery) unsubGallery();
 
         unsubAbout = onSnapshot(doc(db, "content", `about_${currentLang}`), d => {
-            document.getElementById('about-text').innerText = d.exists() ? d.data().text : "Content loading...";
+            document.getElementById('about-text').innerText = d.exists() ? d.data().text : "...";
         });
 
         unsubGallery = onSnapshot(query(collection(db, `gallery_${currentLang}`), orderBy("timestamp", "desc")), snap => {
@@ -154,13 +184,16 @@
             let hCount = 0;
             snap.docs.forEach((d, i) => {
                 const item = d.data();
+                // Slider Logic
                 if(item.isHero && hCount < 3) {
                     sTrack.innerHTML += `<div class="slide" style="background-image:url('${item.url}')"><div class="slide-overlay"><div class="hero-text"><h1>${item.title.toUpperCase()}</h1></div></div></div>`;
                     hCount++;
                 }
+                // Gallery Logic
                 const rev = i % 2 !== 0 ? 'reverse' : '';
                 gList.innerHTML += `<div class="gallery-block ${rev}"><div class="gallery-img-wrapper"><img src="${item.url}"></div><div class="gallery-text"><h3>${item.title}</h3><p>${item.description}</p></div></div>`;
             });
+
             if(hCount > 0) {
                 sTrack.style.width = (hCount * 100) + "%";
                 sTrack.querySelectorAll('.slide').forEach(s => s.style.width = (100 / hCount) + "%");
@@ -186,7 +219,9 @@
         } catch (e) { alert(translations[currentLang].msg_err); }
     };
 
-    fetchData();
+    // Initialize Default
+    changeLang('en');
+
 </script>
 </body>
 </html>
