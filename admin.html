@@ -3,188 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>88 Admin | Control Center</title>
+    <title>88 Admin | Multi-Lang Control</title>
     <style>
-        :root {
-            --blue: #2563eb;
-            --red: #dc2626;
-            --navy: #0f172a;
-            --bg: #f8fafc;
-            --white: #ffffff;
-            --slate-600: #475569;
-            --slate-400: #94a3b8;
-        }
-
-        body { background: var(--bg); font-family: 'Inter', system-ui, sans-serif; margin: 0; padding: 20px; color: var(--navy); }
+        :root { --blue: #2563eb; --red: #dc2626; --navy: #0f172a; --bg: #f8fafc; }
+        body { background: var(--bg); font-family: sans-serif; padding: 20px; }
         .hidden { display: none !important; }
-        .container { max-width: 1200px; margin: 0 auto; }
-
-        .card { background: var(--white); padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 25px; border-top: 5px solid var(--blue); }
-        .card-red { border-top-color: var(--red); }
-
-        .form-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 1rem; outline: none; }
-        .form-input:focus { border-color: var(--blue); }
-        
-        .btn { background: var(--blue); color: white; padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; }
-        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 20px; border-top: 4px solid var(--blue); }
+        .form-input { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        .btn { background: var(--blue); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
         .btn-red { background: var(--red); }
-        .btn-outline { background: transparent; color: var(--slate-600); border: 1px solid #ddd; width: auto; padding: 5px 10px; font-size: 0.8rem; }
-
-        .grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 25px; }
-        @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
-
-        .list-item { padding: 15px; background: #f1f5f9; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid var(--blue); display: flex; gap: 15px; align-items: flex-start; }
-        .inquiry-item { border-left-color: var(--red); flex-direction: column; }
-        .inquiry-meta { display: flex; justify-content: space-between; width: 100%; font-weight: bold; margin-bottom: 5px; }
-        .img-preview-small { width: 60px; height: 60px; border-radius: 8px; background: #cbd5e1; object-fit: cover; flex-shrink: 0; }
-        
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .logo { font-weight: 900; font-size: 1.8rem; background: linear-gradient(135deg, var(--blue), var(--red)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .list-item { background: #f9fafb; padding: 10px; border-radius: 8px; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; border-left: 3px solid var(--blue); }
+        .lang-badge { background: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div id="login-form" class="card" style="max-width: 400px; margin: 100px auto;">
-        <div class="logo" style="text-align: center; margin-bottom: 20px;">88 ADMIN</div>
-        <input type="email" id="email" placeholder="Admin Email" class="form-input">
+        <h2 style="text-align: center;">88 ADMIN</h2>
+        <input type="email" id="email" placeholder="Email" class="form-input">
         <input type="password" id="pass" placeholder="Password" class="form-input">
-        <button id="loginBtn" class="btn">Login to Panel</button>
+        <button id="loginBtn" class="btn">Login</button>
     </div>
 
     <div id="panel" class="hidden container">
-        <header>
-            <div class="logo">88 SERVICE</div>
-            <button id="logoutBtn" class="btn btn-red" style="width: auto;">Logout</button>
-        </header>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h1>Control Center</h1>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <label><strong>Editing Language:</strong></label>
+                <select id="admin-lang" class="form-input" style="width: auto;">
+                    <option value="en">English (EN)</option>
+                    <option value="lv">Latvian (LV)</option>
+                    <option value="ru">Russian (RU)</option>
+                </select>
+                <button id="logoutBtn" class="btn btn-red" style="width: auto;">Logout</button>
+            </div>
+        </div>
 
         <div class="grid">
             <div class="col">
                 <div class="card">
-                    <h3>Company Profile (About)</h3>
-                    <textarea id="about-edit" class="form-input" style="height: 100px;" placeholder="Update the main 'The 88 Standard' text..."></textarea>
-                    <button id="save-about" class="btn">Update Site Text</button>
+                    <h3>Company Profile</h3>
+                    <textarea id="about-edit" class="form-input" style="height: 100px;"></textarea>
+                    <button id="save-about" class="btn">Save Text</button>
                 </div>
-
                 <div class="card">
-                    <h3>Add Project via Link</h3>
+                    <h3>Add New Project</h3>
                     <input type="text" id="g-title" placeholder="Project Title" class="form-input">
-                    <input type="text" id="g-url" placeholder="Direct Image URL (e.g. https://...)" class="form-input">
-                    <textarea id="g-desc" placeholder="Project Description" class="form-input"></textarea>
-                    <label style="display:block; margin: 10px 0;"><input type="checkbox" id="g-hero"> Feature in Hero Slider</label>
-                    <button id="add-gallery" class="btn">Publish Project</button>
+                    <input type="text" id="g-url" placeholder="Image URL" class="form-input">
+                    <textarea id="g-desc" placeholder="Description" class="form-input"></textarea>
+                    <label><input type="checkbox" id="g-hero"> Show in Hero Slider</label>
+                    <button id="add-gallery" class="btn" style="margin-top:10px;">Publish</button>
                 </div>
             </div>
 
             <div class="col">
-                <div class="card card-red">
-                    <h3>Client Inquiries</h3>
-                    <div id="inquiry-list" style="max-height: 400px; overflow-y: auto;"></div>
-                </div>
-                
                 <div class="card">
-                    <h3>Manage Gallery</h3>
-                    <div id="admin-gallery-list" style="max-height: 400px; overflow-y: auto;"></div>
+                    <h3>Inquiries (All Languages)</h3>
+                    <div id="inquiry-list"></div>
+                </div>
+                <div class="card">
+                    <h3>Manage Gallery (Selected Lang)</h3>
+                    <div id="admin-gallery"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, query, orderBy, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, query, orderBy, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAEvwmPsMFa1T6iSxvg6zFoZBd_R55rCQ8",
-            authDomain: "service-6327f.firebaseapp.com",
-            projectId: "service-6327f",
-            storageBucket: "service-6327f.firebasestorage.app",
-            messagingSenderId: "331161362655",
-            appId: "1:331161362655:web:aa7cfbb45f83c1c8de096a"
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyAEvwmPsMFa1T6iSxvg6zFoZBd_R55rCQ8",
+        authDomain: "service-6327f.firebaseapp.com",
+        projectId: "service-6327f",
+        storageBucket: "service-6327f.firebasestorage.app",
+        messagingSenderId: "331161362655",
+        appId: "1:331161362655:web:aa7cfbb45f83c1c8de096a"
+    };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-        // --- AUTH ---
-        document.getElementById('loginBtn').onclick = () => {
-            const e = document.getElementById('email').value, p = document.getElementById('pass').value;
-            signInWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
-        };
-        document.getElementById('logoutBtn').onclick = () => signOut(auth);
+    const getLang = () => document.getElementById('admin-lang').value;
 
-        onAuthStateChanged(auth, user => {
-            document.getElementById('panel').classList.toggle('hidden', !user);
-            document.getElementById('login-form').classList.toggle('hidden', !!user);
-            if(user) loadDashboardData();
+    document.getElementById('loginBtn').onclick = () => {
+        signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value).catch(e => alert(e.message));
+    };
+    document.getElementById('logoutBtn').onclick = () => signOut(auth);
+
+    onAuthStateChanged(auth, user => {
+        document.getElementById('panel').classList.toggle('hidden', !user);
+        document.getElementById('login-form').classList.toggle('hidden', !!user);
+        if(user) loadData();
+    });
+
+    document.getElementById('admin-lang').onchange = () => loadData();
+
+    function loadData() {
+        const lang = getLang();
+        
+        // Load About
+        onSnapshot(doc(db, "content", `about_${lang}`), d => {
+            document.getElementById('about-edit').value = d.exists() ? d.data().text : "";
         });
 
-        function loadDashboardData() {
-            onSnapshot(doc(db, "content", "about"), d => { if(d.exists()) document.getElementById('about-edit').value = d.data().text; });
-            
-            onSnapshot(query(collection(db, "inquiries"), orderBy("timestamp", "desc")), s => {
-                const list = document.getElementById('inquiry-list');
-                list.innerHTML = '';
-                s.forEach(d => {
-                    const data = d.data();
-                    const time = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleString() : 'Just now';
-                    list.innerHTML += `
-                        <div class="list-item inquiry-item">
-                            <div class="inquiry-meta">
-                                <span>${data.name}</span>
-                                <button class="btn-outline" onclick="window.delInq('${d.id}')">Delete</button>
-                            </div>
-                            <div style="font-size:0.9rem; color:var(--slate-600); margin:5px 0;">${data.message}</div>
-                            <div style="font-size:0.7rem; color:var(--slate-400);">${data.email || ''} | ${time}</div>
-                        </div>`;
-                });
+        // Load Gallery
+        onSnapshot(query(collection(db, `gallery_${lang}`), orderBy("timestamp", "desc")), s => {
+            const list = document.getElementById('admin-gallery');
+            list.innerHTML = '';
+            s.forEach(d => {
+                list.innerHTML += `<div class="list-item">
+                    <img src="${d.data().url}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;">
+                    <span style="flex-grow:1">${d.data().title}</span>
+                    <button onclick="window.delGal('${d.id}')" style="color:red;border:none;background:none;cursor:pointer;">&times;</button>
+                </div>`;
             });
+        });
 
-            onSnapshot(query(collection(db, "gallery"), orderBy("timestamp", "desc")), s => {
-                const list = document.getElementById('admin-gallery-list');
-                list.innerHTML = '';
-                s.forEach(d => {
-                    const data = d.data();
-                    list.innerHTML += `
-                        <div class="list-item">
-                            <img src="${data.url}" class="img-preview-small" onerror="this.src='https://placehold.co/60x60?text=Error'">
-                            <div style="flex-grow:1">
-                                <strong>${data.title}</strong> ${data.isHero ? '⭐' : ''}
-                            </div>
-                            <button class="btn-outline" style="color:var(--red)" onclick="window.delGal('${d.id}')">Remove</button>
-                        </div>`;
-                });
+        // Load Inquiries (All)
+        onSnapshot(query(collection(db, "inquiries"), orderBy("timestamp", "desc")), s => {
+            const list = document.getElementById('inquiry-list');
+            list.innerHTML = '';
+            s.forEach(d => {
+                const data = d.data();
+                list.innerHTML += `<div class="list-item" style="flex-direction:column; align-items:flex-start; border-left-color:red;">
+                    <div style="width:100%; display:flex; justify-content:space-between;">
+                        <strong>${data.name}</strong> <span class="lang-badge">${data.lang || 'en'}</span>
+                    </div>
+                    <div style="font-size:0.85rem;">${data.message}</div>
+                    <button onclick="window.delInq('${d.id}')" style="font-size:0.7rem; color:red; border:none; background:none; padding:0; cursor:pointer;">Delete Inquiry</button>
+                </div>`;
             });
-        }
+        });
+    }
 
-        // --- GLOBAL ACTIONS ---
-        window.delInq = async (id) => { if(confirm("Delete inquiry?")) await deleteDoc(doc(db, "inquiries", id)); };
-        window.delGal = async (id) => { if(confirm("Remove project?")) await deleteDoc(doc(db, "gallery", id)); };
+    window.delGal = async (id) => { if(confirm("Remove?")) await deleteDoc(doc(db, `gallery_${getLang()}`, id)); };
+    window.delInq = async (id) => { if(confirm("Delete?")) await deleteDoc(doc(db, "inquiries", id)); };
 
-        document.getElementById('save-about').onclick = async () => {
-            await setDoc(doc(db, "content", "about"), { text: document.getElementById('about-edit').value });
-            alert("Updated!");
+    document.getElementById('save-about').onclick = async () => {
+        await setDoc(doc(db, "content", `about_${getLang()}`), { text: document.getElementById('about-edit').value });
+        alert("About " + getLang().toUpperCase() + " Updated!");
+    };
+
+    document.getElementById('add-gallery').onclick = async () => {
+        const payload = {
+            title: document.getElementById('g-title').value,
+            url: document.getElementById('g-url').value,
+            description: document.getElementById('g-desc').value,
+            isHero: document.getElementById('g-hero').checked,
+            timestamp: serverTimestamp()
         };
-
-        document.getElementById('add-gallery').onclick = async () => {
-            const title = document.getElementById('g-title').value;
-            const url = document.getElementById('g-url').value;
-            const desc = document.getElementById('g-desc').value;
-            const isHero = document.getElementById('g-hero').checked;
-
-            if(!title || !url) return alert("Title and Image URL required.");
-
-            try {
-                await addDoc(collection(db, "gallery"), {
-                    title, url, description: desc, isHero, timestamp: Date.now()
-                });
-                alert("Project Published!");
-                document.getElementById('g-title').value = '';
-                document.getElementById('g-url').value = '';
-                document.getElementById('g-desc').value = '';
-            } catch(err) { alert(err.message); }
-        };
-    </script>
+        await addDoc(collection(db, `gallery_${getLang()}`), payload);
+        alert("Added to " + getLang().toUpperCase());
+    };
+</script>
 </body>
 </html>
