@@ -6,6 +6,30 @@
     <title>88 Service | Premium Solutions</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        :root { --red: #dc2626; --navy: #0f172a; }
+
+        /* Navigation Base */
+        .glass-nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-links { display: flex; align-items: center; gap: 2rem; }
+        .nav-item { text-decoration: none; color: #333; font-weight: 600; font-size: 0.9rem; transition: 0.3s; }
+        .nav-item:hover { color: var(--red); }
+
         /* Language Switcher Styling */
         .lang-switch { display: flex; gap: 8px; margin-left: 20px; align-items: center; }
         .lang-btn { 
@@ -13,21 +37,63 @@
             color: #000; cursor: pointer; padding: 4px 8px; font-size: 0.7rem;
             border-radius: 4px; transition: 0.3s; font-weight: bold;
         }
-        .lang-btn.active { background: var(--red, #dc2626); border-color: var(--red, #dc2626); color: white; }
+        .lang-btn.active { background: var(--red); border-color: var(--red); color: white; }
 
         /* Logo Slogan Styling */
         .logo-container { display: flex; flex-direction: column; align-items: center; line-height: 1; text-decoration: none; color: inherit; }
+        .logo-88 { font-size: 2rem; font-weight: 900; color: #000; }
         .logo-slogan { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; font-weight: 400; }
-        
-        .glass-nav .logo-slogan { color: rgba(0, 0, 0, 0.7); }
-        .main-footer .logo-slogan { color: var(--red, #dc2626); }
 
-        /* Slider visibility fixes */
-        .hero-slider { overflow: hidden; width: 100%; height: 85vh; background: #000; position: relative; }
+        /* Mobile Menu Toggle */
+        .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; z-index: 1001; }
+        .menu-toggle span { width: 25px; height: 3px; background: #000; transition: 0.3s; border-radius: 2px; }
+
+        /* Mobile Responsive adjustments */
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background: white;
+                flex-direction: column;
+                justify-content: center;
+                transition: 0.4s ease-in-out;
+                box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+            }
+            .nav-links.active { right: 0; }
+            .lang-switch { margin-left: 0; margin-top: 2rem; }
+            
+            /* Hamburger Animation */
+            .menu-toggle.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+            .menu-toggle.active span:nth-child(2) { opacity: 0; }
+            .menu-toggle.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+        }
+
+        /* Slider & Content */
+        .hero-slider { overflow: hidden; width: 100%; height: 85vh; background: #000; position: relative; margin-top: 60px; }
         .slider-track { display: flex; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
         .slide { flex-shrink: 0; width: 100%; height: 100%; background-size: cover; background-position: center; position: relative; }
         .slide-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; }
         .hero-text h1 { color: white; font-size: clamp(2rem, 8vw, 4.5rem); text-align: center; font-weight: 900; }
+
+        .section { padding: 5rem 2rem; max-width: 1200px; margin: 0 auto; }
+        .section-tag { color: var(--red); font-weight: bold; text-transform: uppercase; letter-spacing: 2px; }
+        
+        .gallery-block { display: flex; gap: 2rem; margin-bottom: 4rem; align-items: center; }
+        .gallery-block.reverse { flex-direction: row-reverse; }
+        .gallery-img-wrapper { flex: 1; overflow: hidden; border-radius: 8px; }
+        .gallery-img-wrapper img { width: 100%; height: auto; transition: 0.5s; }
+        .gallery-text { flex: 1; }
+
+        .bg-navy { background: var(--navy); color: white; padding: 4rem 2rem; border-radius: 15px; }
+        .form-input { width: 100%; padding: 1rem; margin-bottom: 1rem; border: none; border-radius: 4px; }
+        .btn-red { background: var(--red); color: white; border: none; padding: 1rem 2rem; font-weight: bold; cursor: pointer; width: 100%; }
+        
+        .main-footer { padding: 4rem 2rem; border-top: 1px solid #eee; margin-top: 4rem; }
+        .footer-inner { max-width: 1200px; margin: 0 auto; }
     </style>
 </head>
 <body>
@@ -38,13 +104,20 @@
             <div class="logo-88">88</div>
             <div class="logo-slogan" data-i18n="slogan">Service</div>
         </a>
-        <div class="nav-links">
+        
+        <div class="menu-toggle" id="mobile-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <div class="nav-links" id="nav-links">
             <a href="#main-slider" class="nav-item" data-i18n="nav_home">Home</a>
             <a href="#about" class="nav-item" data-i18n="nav_about">About</a>
             <a href="#gallery" class="nav-item" data-i18n="nav_gallery">Gallery</a>
             <a href="#contactForm" class="nav-item" data-i18n="nav_contact">Contact</a>
             <div class="lang-switch">
-                <button class="lang-btn active" onclick="changeLang('en')">EN</button>
+                <button class="lang-btn" onclick="changeLang('en')">EN</button>
                 <button class="lang-btn" onclick="changeLang('lv')">LV</button>
                 <button class="lang-btn" onclick="changeLang('ru')">RU</button>
             </div>
@@ -69,13 +142,15 @@
 <section class="section">
     <div class="bg-navy">
         <div class="contact-container">
-            <h2 style="text-align: center; font-size: 3rem; margin-bottom: 2rem;"><span data-i18n="form_title">START A PROJECT</span> <span style="color:var(--red)">88</span></h2>
+            <h2 style="text-align: center; font-size: 3rem; margin-bottom: 2rem; color: white;">
+                <span data-i18n="form_title">START A PROJECT</span> <span style="color:var(--red)">88</span>
+            </h2>
             <form id="contactForm">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                     <input type="text" id="custName" class="form-input" required>
                     <input type="email" id="custEmail" class="form-input" required>
                 </div>
-                <textarea id="custMsg" rows="5" class="form-input" required></textarea>
+                <textarea id="custMsg" rows="5" class="form-input" required style="margin-top:1rem;"></textarea>
                 <button type="submit" id="sendBtn" class="btn-red" data-i18n="form_btn">SEND REQUEST</button>
             </form>
         </div>
@@ -83,7 +158,7 @@
 
     <footer class="main-footer">
         <div class="footer-inner">
-            <div class="footer-top">
+            <div class="footer-top" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2rem;">
                 <div class="footer-brand">
                     <div class="logo-container" style="align-items: flex-start; margin-bottom: 1rem;">
                         <div class="logo-88">88</div>
@@ -93,10 +168,10 @@
                 </div>
                 <div class="footer-contact">
                     <h4 data-i18n="footer_connect">Connect</h4>
-                    <a href="tel:+37120000000" class="phone-link">+371 20 000 000</a>
+                    <a href="tel:+37120000000" style="color: var(--red); text-decoration: none; font-weight: bold;">+371 20 000 000</a>
                 </div>
             </div>
-            <div class="footer-bottom">
+            <div class="footer-bottom" style="margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #eee;">
                 <p>&copy; 2026 88 Service. <span data-i18n="footer_rights">All rights reserved.</span></p>
             </div>
         </div>
@@ -149,21 +224,30 @@
     let currentLang = 'en';
     let unsubAbout, unsubGallery;
 
+    // Mobile Menu Logic
+    const menuToggle = document.getElementById('mobile-menu');
+    const navLinks = document.getElementById('nav-links');
+
+    menuToggle.addEventListener('click', () => {
+        menuToggle.classList.toggle('active');
+        navLinks.classList.toggle('active');
+    });
+
     window.changeLang = (lang) => {
         currentLang = lang;
-        
-        // Update Buttons
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.innerText.toLowerCase() === lang));
-        
-        // Update Static Text
+        document.querySelectorAll('.lang-btn').forEach(b => {
+            b.classList.toggle('active', b.innerText.toLowerCase() === lang);
+        });
         document.querySelectorAll('[data-i18n]').forEach(el => {
             el.innerText = translations[lang][el.getAttribute('data-i18n')];
         });
-
-        // Update Placeholders
         document.getElementById('custName').placeholder = translations[lang].ph_name;
         document.getElementById('custEmail').placeholder = translations[lang].ph_email;
         document.getElementById('custMsg').placeholder = translations[lang].ph_msg;
+        
+        // Close menu on lang change if mobile
+        navLinks.classList.remove('active');
+        menuToggle.classList.remove('active');
 
         fetchData();
     };
@@ -184,12 +268,10 @@
             let hCount = 0;
             snap.docs.forEach((d, i) => {
                 const item = d.data();
-                // Slider Logic
                 if(item.isHero && hCount < 3) {
                     sTrack.innerHTML += `<div class="slide" style="background-image:url('${item.url}')"><div class="slide-overlay"><div class="hero-text"><h1>${item.title.toUpperCase()}</h1></div></div></div>`;
                     hCount++;
                 }
-                // Gallery Logic
                 const rev = i % 2 !== 0 ? 'reverse' : '';
                 gList.innerHTML += `<div class="gallery-block ${rev}"><div class="gallery-img-wrapper"><img src="${item.url}"></div><div class="gallery-text"><h3>${item.title}</h3><p>${item.description}</p></div></div>`;
             });
@@ -219,9 +301,15 @@
         } catch (e) { alert(translations[currentLang].msg_err); }
     };
 
-    // Initialize Default
-    changeLang('en');
+    // Close mobile menu on nav link click
+    document.querySelectorAll('.nav-item').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            menuToggle.classList.remove('active');
+        });
+    });
 
+    changeLang('en');
 </script>
 </body>
 </html>
