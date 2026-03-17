@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>88 Admin | Multi-Lang Control</title>
+    <style>
+        :root { --blue: #2563eb; --red: #dc2626; --navy: #0f172a; --bg: #f8fafc; }
+        body { background: var(--bg); font-family: 'Inter', system-ui, sans-serif; padding: 20px; color: var(--navy); }
+        .hidden { display: none !important; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 20px; border-top: 4px solid var(--blue); }
+        .card-red { border-top-color: var(--red); }
+        
+        .form-input { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-family: inherit; }
+        .btn { background: var(--blue); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.2s; }
+        .btn:hover { opacity: 0.9; }
+        .btn-red { background: var(--red); }
+        
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 850px) { .grid { grid-template-columns: 1fr; } }
+
+        .list-item { background: #f9fafb; padding: 15px; border-radius: 8px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; border-left: 4px solid var(--blue); }
+        .inquiry-card { flex-direction: column; align-items: flex-start; border-left-color: var(--red); }
+        
+        .lang-badge { background: #e2e8f0; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 900; text-transform: uppercase; }
+        .email-link { color: var(--blue); text-decoration: none; font-weight: bold; font-size: 0.85rem; }
+        .email-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div id="login-form" class="card" style="max-width: 400px; margin: 100px auto;">
+        <h2 style="text-align: center; letter-spacing: 2px;">88 ADMIN</h2>
+        <input type="email" id="email" placeholder="Admin Email" class="form-input">
+        <input type="password" id="pass" placeholder="Password" class="form-input">
+        <button id="loginBtn" class="btn">Login to Panel</button>
+    </div>
+
+    <div id="panel" class="hidden container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h1 style="margin: 0;">Control Center</h1>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <label><strong>Language:</strong></label>
+                <select id="admin-lang" class="form-input" style="width: auto; margin: 0;">
+                    <option value="en">English (EN)</option>
+                    <option value="lv">Latvian (LV)</option>
+                    <option value="ru">Russian (RU)</option>
+                </select>
+                <button id="logoutBtn" class="btn btn-red" style="width: auto;">Logout</button>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="col">
+                <div class="card">
+                    <h3>Company Profile (About)</h3>
+                    <p style="font-size: 0.8rem; color: #666;">Updating text for the selected language.</p>
+                    <textarea id="about-edit" class="form-input" style="height: 120px;" placeholder="Describe the 88 Standard..."></textarea>
+                    <button id="save-about" class="btn">Update About Text</button>
+                </div>
+
+                <div class="card">
+                    <h3>Add New Project</h3>
+                    <input type="text" id="g-title" placeholder="Project Title" class="form-input">
+                    <input type="text" id="g-url" placeholder="Direct Image URL (https://...)" class="form-input">
+                    <textarea id="g-desc" placeholder="Project Description" class="form-input" style="height: 80px;"></textarea>
+                    <label style="display: block; margin: 10px 0; cursor: pointer;">
+                        <input type="checkbox" id="g-hero"> Feature in Hero Slider
+                    </label>
+                    <button id="add-gallery" class="btn">Publish to Gallery</button>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card card-red">
+                    <h3>Client Inquiries</h3>
+                    <div id="inquiry-list" style="max-height: 500px; overflow-y: auto;">
+                        <p style="color: #999; text-align: center;">No inquiries yet.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Gallery Assets (<span id="current-view-lang">EN</span>)</h3>
+                    <div id="admin-gallery" style="max-height: 400px; overflow-y: auto;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, query, orderBy, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAEvwmPsMFa1T6iSxvg6zFoZBd_R55rCQ8",
+        authDomain: "service-6327f.firebaseapp.com",
+        projectId: "service-6327f",
+        storageBucket: "service-6327f.firebasestorage.app",
+        messagingSenderId: "331161362655",
+        appId: "1:331161362655:web:aa7cfbb45f83c1c8de096a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const getLang = () => document.getElementById('admin-lang').value;
+
+    // --- Authentication ---
+    document.getElementById('loginBtn').onclick = () => {
+        const e = document.getElementById('email').value;
+        const p = document.getElementById('pass').value;
+        signInWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
+    };
+
+    document.getElementById('logoutBtn').onclick = () => signOut(auth);
+
+    onAuthStateChanged(auth, user => {
+        document.getElementById('panel').classList.toggle('hidden', !user);
+        document.getElementById('login-form').classList.toggle('hidden', !!user);
+        if(user) loadData();
+    });
+
+    // --- Data Management ---
+    document.getElementById('admin-lang').onchange = () => {
+        document.getElementById('current-view-lang').innerText = getLang().toUpperCase();
+        loadData();
+    };
+
+    function loadData() {
+        const lang = getLang();
+        
+        // 1. Sync About Text
+        onSnapshot(doc(db, "content", `about_${lang}`), d => {
+            if(d.exists()) document.getElementById('about-edit').value = d.data().text;
+            else document.getElementById('about-edit').value = "";
+        });
+
+        // 2. Sync Gallery Items
+        onSnapshot(query(collection(db, `gallery_${lang}`), orderBy("timestamp", "desc")), s => {
+            const list = document.getElementById('admin-gallery');
+            list.innerHTML = s.empty ? '<p style="color:#999; padding:10px;">No images in this language.</p>' : '';
+            s.forEach(d => {
+                const item = d.data();
+                list.innerHTML += `
+                    <div class="list-item">
+                        <img src="${item.url}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;" onerror="this.src='https://placehold.co/50x50?text=Error'">
+                        <div style="flex-grow:1; font-size:0.9rem;">
+                            <strong>${item.title}</strong> ${item.isHero ? '⭐' : ''}
+                        </div>
+                        <button onclick="window.delGal('${d.id}')" style="color:var(--red); border:none; background:none; cursor:pointer; font-size:1.2rem;">&times;</button>
+                    </div>`;
+            });
+        });
+
+        // 3. Sync Inquiries (Global)
+        onSnapshot(query(collection(db, "inquiries"), orderBy("timestamp", "desc")), s => {
+            const list = document.getElementById('inquiry-list');
+            list.innerHTML = s.empty ? '<p style="color:#999; text-align:center;">No inquiries received.</p>' : '';
+            s.forEach(d => {
+                const data = d.data();
+                const date = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleString() : 'Just now';
+                list.innerHTML += `
+                    <div class="list-item inquiry-card">
+                        <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+                            <strong>${data.name}</strong>
+                            <span class="lang-badge">${data.lang || 'en'}</span>
+                        </div>
+                        <a href="mailto:${data.email}" class="email-link">${data.email}</a>
+                        <div style="font-size:0.9rem; color:#444; margin:10px 0; background:#fff; padding:10px; border-radius:6px; border:1px solid #eee; width:100%; box-sizing:border-box;">
+                            ${data.message}
+                        </div>
+                        <div style="width:100%; display:flex; justify-content:space-between; align-items:center; font-size:0.7rem; color:#999;">
+                            <span>${date}</span>
+                            <button onclick="window.delInq('${d.id}')" style="color:var(--red); border:none; background:none; cursor:pointer; font-weight:bold; font-size:0.7rem;">DELETE</button>
+                        </div>
+                    </div>`;
+            });
+        });
+    }
+
+    // --- Global Actions ---
+    window.delGal = async (id) => { if(confirm("Permanently remove this project?")) await deleteDoc(doc(db, `gallery_${getLang()}`, id)); };
+    window.delInq = async (id) => { if(confirm("Delete this inquiry?")) await deleteDoc(doc(db, "inquiries", id)); };
+
+    document.getElementById('save-about').onclick = async () => {
+        const text = document.getElementById('about-edit').value;
+        await setDoc(doc(db, "content", `about_${getLang()}`), { text: text });
+        alert("About info updated for " + getLang().toUpperCase());
+    };
+
+    document.getElementById('add-gallery').onclick = async () => {
+        const title = document.getElementById('g-title').value;
+        const url = document.getElementById('g-url').value;
+        const desc = document.getElementById('g-desc').value;
+        const isHero = document.getElementById('g-hero').checked;
+
+        if(!title || !url) return alert("Title and URL are required.");
+
+        await addDoc(collection(db, `gallery_${getLang()}`), {
+            title, url, description: desc, isHero, timestamp: serverTimestamp()
+        });
+
+        alert("Project Published!");
+        // Reset fields
+        document.getElementById('g-title').value = '';
+        document.getElementById('g-url').value = '';
+        document.getElementById('g-desc').value = '';
+        document.getElementById('g-hero').checked = false;
+    };
+
+</script>
+</body>
+</html>
