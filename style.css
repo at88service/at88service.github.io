@@ -23,15 +23,31 @@ body { margin: 0; background-color: var(--slate-50); color: var(--navy); overflo
     display: flex; justify-content: space-between; align-items: center;
 }
 
-/* Logo */
-.logo-container { display: flex; flex-direction: column; text-decoration: none; color: inherit; }
-.logo-88 {
-    font-size: 2.2rem; font-weight: 900; line-height: 1;
-    background: linear-gradient(135deg, #000, var(--red));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+.logo-container {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    height: 100%;
 }
-.logo-slogan { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 3px; font-weight: 600; margin-top: 2px; color: #333; }
 
+.site-logo {
+    height: 50px; /* Adjust this height based on your nav bar thickness */
+    width: auto;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.site-logo:hover {
+    transform: scale(1.05);
+}
+
+/* Ensure the logo looks good in the footer */
+.footer-brand .site-logo {
+    height: 60px;
+    margin-bottom: 1.5rem;
+}
+
+/* Remove the old .logo-88 and .logo-slogan styles if you no longer need them */
 /* Nav Links & Mobile Responsive Fix */
 .nav-links { display: flex; align-items: center; gap: 2rem; }
 .nav-item {
