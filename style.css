@@ -31,7 +31,7 @@ body { margin: 0; background-color: var(--slate-50); color: var(--navy); overflo
 }
 
 .site-logo {
-    height: 88px; /* Adjust this height based on your nav bar thickness */
+    height: 60px; /* Adjust this height based on your nav bar thickness */
     width: auto;
     display: block;
     transition: transform 0.3s ease;
@@ -43,7 +43,7 @@ body { margin: 0; background-color: var(--slate-50); color: var(--navy); overflo
 
 /* Ensure the logo looks good in the footer */
 .footer-brand .site-logo {
-    height: 88px;
+    height: 60px;
     margin-bottom: 1.5rem;
 }
 
