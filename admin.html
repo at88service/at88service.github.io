@@ -3,87 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>88 Admin | Multi-Lang Control</title>
+    <title>88 Admin | Control Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --blue: #2563eb; --red: #dc2626; --navy: #0f172a; --bg: #f8fafc; }
-        body { background: var(--bg); font-family: 'Inter', system-ui, sans-serif; padding: 20px; color: var(--navy); }
+        :root { --blue: #2563eb; --red: #dc2626; --navy: #0f172a; --bg: #f8fafc; --white: #ffffff; }
+        body { background: var(--bg); font-family: 'Inter', sans-serif; margin: 0; color: var(--navy); }
         .hidden { display: none !important; }
-        .container { max-width: 1100px; margin: 0 auto; }
         
-        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 20px; border-top: 4px solid var(--blue); }
+        /* Layout */
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+        /* Components */
+        .card { background: var(--white); padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border-top: 5px solid var(--blue); margin-bottom: 20px; }
         .card-red { border-top-color: var(--red); }
         
-        .form-input { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-family: inherit; }
-        .btn { background: var(--blue); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.2s; }
-        .btn:hover { opacity: 0.9; }
-        .btn-red { background: var(--red); }
-        
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        @media (max-width: 850px) { .grid { grid-template-columns: 1fr; } }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 5px; color: var(--slate-600); }
+        .form-input { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; font-size: 0.95rem; box-sizing: border-box; }
+        .form-input:focus { outline: 2px solid var(--blue); border-color: transparent; }
 
-        .list-item { background: #f9fafb; padding: 15px; border-radius: 8px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; border-left: 4px solid var(--blue); }
-        .inquiry-card { flex-direction: column; align-items: flex-start; border-left-color: var(--red); }
+        .btn { background: var(--blue); color: white; border: none; padding: 14px; border-radius: 8px; cursor: pointer; font-weight: 800; width: 100%; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px; }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-red { background: var(--red); }
+
+        /* List Items */
+        .list-item { background: #fdfdfd; padding: 15px; border-radius: 10px; border: 1px solid #edf2f7; margin-bottom: 12px; display: flex; align-items: center; gap: 15px; }
+        .list-item img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; background: #eee; }
+        .item-info { flex-grow: 1; }
+        .item-info strong { display: block; font-size: 1rem; }
+        .item-info small { color: #64748b; font-size: 0.75rem; }
+
+        /* Header */
+        header { background: var(--navy); color: white; padding: 20px; margin-bottom: 40px; }
+        .header-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
         
-        .lang-badge { background: #e2e8f0; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 900; text-transform: uppercase; }
-        .email-link { color: var(--blue); text-decoration: none; font-weight: bold; font-size: 0.85rem; }
-        .email-link:hover { text-decoration: underline; }
+        .badge { background: #fee2e2; color: #dc2626; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 900; }
     </style>
 </head>
 <body>
 
-    <div id="login-form" class="card" style="max-width: 400px; margin: 100px auto;">
-        <h2 style="text-align: center; letter-spacing: 2px;">88 ADMIN</h2>
-        <input type="email" id="email" placeholder="Admin Email" class="form-input">
-        <input type="password" id="pass" placeholder="Password" class="form-input">
-        <button id="loginBtn" class="btn">Login to Panel</button>
+    <div id="login-form" style="max-width: 400px; margin: 100px auto;" class="card">
+        <h2 style="text-align: center; margin-top: 0;">88 ADMIN LOGIN</h2>
+        <input type="email" id="email" placeholder="Email" class="form-input" style="margin-bottom:10px;">
+        <input type="password" id="pass" placeholder="Password" class="form-input" style="margin-bottom:20px;">
+        <button id="loginBtn" class="btn">Enter Control Center</button>
     </div>
 
-    <div id="panel" class="hidden container">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h1 style="margin: 0;">Control Center</h1>
-            <div style="display: flex; gap: 10px; align-items: center;">
-                <label><strong>Language:</strong></label>
-                <select id="admin-lang" class="form-input" style="width: auto; margin: 0;">
-                    <option value="en">English (EN)</option>
-                    <option value="lv">Latvian (LV)</option>
-                    <option value="ru">Russian (RU)</option>
-                </select>
-                <button id="logoutBtn" class="btn btn-red" style="width: auto;">Logout</button>
-            </div>
-        </div>
-
-        <div class="grid">
-            <div class="col">
-                <div class="card">
-                    <h3>Company Profile (About)</h3>
-                    <p style="font-size: 0.8rem; color: #666;">Updating text for the selected language.</p>
-                    <textarea id="about-edit" class="form-input" style="height: 120px;" placeholder="Describe the 88 Standard..."></textarea>
-                    <button id="save-about" class="btn">Update About Text</button>
-                </div>
-
-                <div class="card">
-                    <h3>Add New Project</h3>
-                    <input type="text" id="g-title" placeholder="Project Title" class="form-input">
-                    <input type="text" id="g-url" placeholder="Direct Image URL (https://...)" class="form-input">
-                    <textarea id="g-desc" placeholder="Project Description" class="form-input" style="height: 80px;"></textarea>
-                    <label style="display: block; margin: 10px 0; cursor: pointer;">
-                        <input type="checkbox" id="g-hero"> Feature in Hero Slider
-                    </label>
-                    <button id="add-gallery" class="btn">Publish to Gallery</button>
+    <div id="panel" class="hidden">
+        <header>
+            <div class="header-inner">
+                <h2 style="margin:0; letter-spacing:2px;">88 COMMAND</h2>
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <select id="admin-lang" class="form-input" style="width: auto; padding: 5px 10px;">
+                        <option value="en">English (EN)</option>
+                        <option value="lv">Latvian (LV)</option>
+                        <option value="ru">Russian (RU)</option>
+                    </select>
+                    <button id="logoutBtn" class="btn btn-red" style="width: auto; padding: 8px 15px; font-size: 0.8rem;">Logout</button>
                 </div>
             </div>
+        </header>
 
-            <div class="col">
-                <div class="card card-red">
-                    <h3>Client Inquiries</h3>
-                    <div id="inquiry-list" style="max-height: 500px; overflow-y: auto;">
-                        <p style="color: #999; text-align: center;">No inquiries yet.</p>
+        <div class="container">
+            <div class="grid">
+                <div class="col">
+                    <div class="card">
+                        <h3>About Us Description</h3>
+                        <p style="font-size: 0.8rem; color: #666; margin-bottom: 15px;">This updates the "About" section for the selected language.</p>
+                        <textarea id="about-edit" class="form-input" style="height: 150px; margin-bottom: 15px;" placeholder="Describe the 88 Standard..."></textarea>
+                        <button id="save-about" class="btn">Save About Text</button>
+                    </div>
+
+                    <div class="card">
+                        <h3>Create New Project Page</h3>
+                        <div class="form-group">
+                            <label>Project Title</label>
+                            <input type="text" id="g-title" placeholder="e.g. Modern Villa" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label>Image URL (Direct Link)</label>
+                            <input type="text" id="g-url" placeholder="https://..." class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label>Project Description (Shown on page)</label>
+                            <textarea id="g-desc" placeholder="Full details about this project..." class="form-input" style="height: 100px;"></textarea>
+                        </div>
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; margin-bottom: 15px;">
+                            <input type="checkbox" id="g-hero"> Feature in Hero Slider
+                        </label>
+                        <button id="add-gallery" class="btn">Publish Project Page</button>
                     </div>
                 </div>
 
-                <div class="card">
-                    <h3>Gallery Assets (<span id="current-view-lang">EN</span>)</h3>
-                    <div id="admin-gallery" style="max-height: 400px; overflow-y: auto;"></div>
+                <div class="col">
+                    <div class="card card-red">
+                        <h3>Active Inquiries</h3>
+                        <div id="inquiry-list" style="max-height: 400px; overflow-y: auto;">
+                            <p style="color: #94a3b8; text-align: center;">Scanning for messages...</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Managed Projects (<span id="view-lang">EN</span>)</h3>
+                        <div id="admin-gallery" style="max-height: 500px; overflow-y: auto;">
+                            </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -109,11 +135,11 @@
 
     const getLang = () => document.getElementById('admin-lang').value;
 
-    // --- Authentication ---
+    // --- Auth Logic ---
     document.getElementById('loginBtn').onclick = () => {
         const e = document.getElementById('email').value;
         const p = document.getElementById('pass').value;
-        signInWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
+        signInWithEmailAndPassword(auth, e, p).catch(err => alert("Access Denied: " + err.message));
     };
 
     document.getElementById('logoutBtn').onclick = () => signOut(auth);
@@ -121,70 +147,67 @@
     onAuthStateChanged(auth, user => {
         document.getElementById('panel').classList.toggle('hidden', !user);
         document.getElementById('login-form').classList.toggle('hidden', !!user);
-        if(user) loadData();
+        if(user) syncData();
     });
 
-    // --- Data Management ---
+    // --- Content Sync ---
     document.getElementById('admin-lang').onchange = () => {
-        document.getElementById('current-view-lang').innerText = getLang().toUpperCase();
-        loadData();
+        document.getElementById('view-lang').innerText = getLang().toUpperCase();
+        syncData();
     };
 
-    function loadData() {
+    function syncData() {
         const lang = getLang();
         
         // 1. Sync About Text
         onSnapshot(doc(db, "content", `about_${lang}`), d => {
-            if(d.exists()) document.getElementById('about-edit').value = d.data().text;
-            else document.getElementById('about-edit').value = "";
+            document.getElementById('about-edit').value = d.exists() ? d.data().text : "";
         });
 
-        // 2. Sync Gallery Items
-        onSnapshot(query(collection(db, `gallery_${lang}`), orderBy("timestamp", "desc")), s => {
+        // 2. Sync Projects (Gallery)
+        onSnapshot(query(collection(db, `gallery_${lang}`), orderBy("timestamp", "desc")), snap => {
             const list = document.getElementById('admin-gallery');
-            list.innerHTML = s.empty ? '<p style="color:#999; padding:10px;">No images in this language.</p>' : '';
-            s.forEach(d => {
+            list.innerHTML = snap.empty ? '<p style="text-align:center; padding:20px; color:#94a3b8;">No projects found.</p>' : '';
+            snap.forEach(d => {
                 const item = d.data();
                 list.innerHTML += `
                     <div class="list-item">
-                        <img src="${item.url}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;" onerror="this.src='https://placehold.co/50x50?text=Error'">
-                        <div style="flex-grow:1; font-size:0.9rem;">
-                            <strong>${item.title}</strong> ${item.isHero ? '⭐' : ''}
+                        <img src="${item.url}" onerror="this.src='https://placehold.co/100x100?text=Error'">
+                        <div class="item-info">
+                            <strong>${item.title} ${item.isHero ? '⭐' : ''}</strong>
+                            <small>Language: ${lang.toUpperCase()}</small>
                         </div>
-                        <button onclick="window.delGal('${d.id}')" style="color:var(--red); border:none; background:none; cursor:pointer; font-size:1.2rem;">&times;</button>
+                        <button onclick="window.delProject('${d.id}')" style="background:none; border:none; color:var(--red); cursor:pointer; font-size:1.5rem;">&times;</button>
                     </div>`;
             });
         });
 
         // 3. Sync Inquiries (Global)
-        onSnapshot(query(collection(db, "inquiries"), orderBy("timestamp", "desc")), s => {
+        onSnapshot(query(collection(db, "inquiries"), orderBy("timestamp", "desc")), snap => {
             const list = document.getElementById('inquiry-list');
-            list.innerHTML = s.empty ? '<p style="color:#999; text-align:center;">No inquiries received.</p>' : '';
-            s.forEach(d => {
+            list.innerHTML = snap.empty ? '<p style="text-align:center; color:#94a3b8;">No messages yet.</p>' : '';
+            snap.forEach(d => {
                 const data = d.data();
-                const date = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleString() : 'Just now';
+                const time = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleDateString() : 'New';
                 list.innerHTML += `
-                    <div class="list-item inquiry-card">
-                        <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
-                            <strong>${data.name}</strong>
-                            <span class="lang-badge">${data.lang || 'en'}</span>
+                    <div class="list-item" style="flex-direction:column; align-items:flex-start;">
+                        <div style="display:flex; justify-content:space-between; width:100%; margin-bottom:10px;">
+                            <strong>${data.name} <span class="badge">${data.lang}</span></strong>
+                            <small>${time}</small>
                         </div>
-                        <a href="mailto:${data.email}" class="email-link">${data.email}</a>
-                        <div style="font-size:0.9rem; color:#444; margin:10px 0; background:#fff; padding:10px; border-radius:6px; border:1px solid #eee; width:100%; box-sizing:border-box;">
+                        <div style="font-size:0.85rem; background:#f1f5f9; padding:10px; border-radius:6px; width:100%; box-sizing:border-box;">
                             ${data.message}
+                            <br><a href="mailto:${data.email}" style="color:var(--blue); font-weight:bold; text-decoration:none; margin-top:5px; display:inline-block;">${data.email}</a>
                         </div>
-                        <div style="width:100%; display:flex; justify-content:space-between; align-items:center; font-size:0.7rem; color:#999;">
-                            <span>${date}</span>
-                            <button onclick="window.delInq('${d.id}')" style="color:var(--red); border:none; background:none; cursor:pointer; font-weight:bold; font-size:0.7rem;">DELETE</button>
-                        </div>
+                        <button onclick="window.delInquiry('${d.id}')" style="margin-top:10px; background:none; border:none; color:var(--red); font-weight:800; font-size:0.7rem; cursor:pointer;">DELETE MESSAGE</button>
                     </div>`;
             });
         });
     }
 
-    // --- Global Actions ---
-    window.delGal = async (id) => { if(confirm("Permanently remove this project?")) await deleteDoc(doc(db, `gallery_${getLang()}`, id)); };
-    window.delInq = async (id) => { if(confirm("Delete this inquiry?")) await deleteDoc(doc(db, "inquiries", id)); };
+    // --- Global Functions ---
+    window.delProject = async (id) => { if(confirm("Permanently delete this project?")) await deleteDoc(doc(db, `gallery_${getLang()}`, id)); };
+    window.delInquiry = async (id) => { if(confirm("Delete this message?")) await deleteDoc(doc(db, "inquiries", id)); };
 
     document.getElementById('save-about').onclick = async () => {
         const text = document.getElementById('about-edit').value;
@@ -198,14 +221,14 @@
         const desc = document.getElementById('g-desc').value;
         const isHero = document.getElementById('g-hero').checked;
 
-        if(!title || !url) return alert("Title and URL are required.");
+        if(!title || !url) return alert("Title and Image URL are required.");
 
         await addDoc(collection(db, `gallery_${getLang()}`), {
             title, url, description: desc, isHero, timestamp: serverTimestamp()
         });
 
-        alert("Project Published!");
-        // Reset fields
+        alert("Project Published! It is now in the nav dropdown.");
+        // Reset
         document.getElementById('g-title').value = '';
         document.getElementById('g-url').value = '';
         document.getElementById('g-desc').value = '';
