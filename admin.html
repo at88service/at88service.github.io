@@ -3,99 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>88 Service | Premium Solutions</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <title>88 Admin | Multi-Lang Control</title>
+    <style>
+        :root { --blue: #2563eb; --red: #dc2626; --navy: #0f172a; --bg: #f8fafc; }
+        body { background: var(--bg); font-family: 'Inter', system-ui, sans-serif; padding: 20px; color: var(--navy); }
+        .hidden { display: none !important; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 20px; border-top: 4px solid var(--blue); }
+        .card-red { border-top-color: var(--red); }
+        
+        .form-input { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-family: inherit; }
+        .btn { background: var(--blue); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.2s; }
+        .btn:hover { opacity: 0.9; }
+        .btn-red { background: var(--red); }
+        
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 850px) { .grid { grid-template-columns: 1fr; } }
+
+        .list-item { background: #f9fafb; padding: 15px; border-radius: 8px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; border-left: 4px solid var(--blue); }
+        .inquiry-card { flex-direction: column; align-items: flex-start; border-left-color: var(--red); }
+        
+        .lang-badge { background: #e2e8f0; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 900; text-transform: uppercase; }
+        .email-link { color: var(--blue); text-decoration: none; font-weight: bold; font-size: 0.85rem; }
+        .email-link:hover { text-decoration: underline; }
+    </style>
 </head>
 <body>
 
-<nav class="glass-nav">
-    <div class="nav-inner">
-        <a href="#" class="logo-container">
-            <a href="#" class="logo-container">
-            <img src="SERVISS88.png" alt="88 Serviss Logo" class="site-logo">
-</a>
-        </a>
+    <div id="login-form" class="card" style="max-width: 400px; margin: 100px auto;">
+        <h2 style="text-align: center; letter-spacing: 2px;">88 ADMIN</h2>
+        <input type="email" id="email" placeholder="Admin Email" class="form-input">
+        <input type="password" id="pass" placeholder="Password" class="form-input">
+        <button id="loginBtn" class="btn">Login to Panel</button>
+    </div>
 
-        <div class="menu-toggle" id="mobile-menu">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-
-        <div class="nav-links" id="nav-links">
-            <a href="#main-slider" class="nav-item" data-i18n="nav_home">Home</a>
-            <a href="#about" class="nav-item" data-i18n="nav_about">About</a>
-            <a href="#gallery" class="nav-item" data-i18n="nav_gallery">Gallery</a>
-            <a href="#contactForm" class="nav-item" data-i18n="nav_contact">Contact</a>
-
-            <div class="lang-switch">
-                <button class="lang-btn" onclick="changeLang('en')">EN</button>
-                <button class="lang-btn" onclick="changeLang('lv')">LV</button>
-                <button class="lang-btn" onclick="changeLang('ru')">RU</button>
+    <div id="panel" class="hidden container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h1 style="margin: 0;">Control Center</h1>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <label><strong>Language:</strong></label>
+                <select id="admin-lang" class="form-input" style="width: auto; margin: 0;">
+                    <option value="en">English (EN)</option>
+                    <option value="lv">Latvian (LV)</option>
+                    <option value="ru">Russian (RU)</option>
+                </select>
+                <button id="logoutBtn" class="btn btn-red" style="width: auto;">Logout</button>
             </div>
         </div>
-    </div>
-</nav>
 
-<header class="hero-slider">
-    <div class="slider-track" id="main-slider"></div>
-</header>
-
-<section id="about" class="section">
-    <span class="section-tag" data-i18n="since">Since 2026</span>
-    <h2 class="section-title" data-i18n="about_title">The 88 Standard</h2>
-    <p id="about-text" class="about-description">Loading...</p>
-</section>
-
-<section id="gallery" class="section-full bg-slate">
-    <div id="gallery-list" class="container"></div>
-</section>
-
-<section id="contact" class="section">
-    <div class="bg-navy">
-        <div class="contact-container">
-            <h2 class="form-title">
-                <span data-i18n="form_title">START A PROJECT</span> <span class="text-red">88</span>
-            </h2>
-            <form id="contactForm">
-                <div class="form-row">
-                    <input type="text" id="custName" class="form-input" required>
-                    <input type="email" id="custEmail" class="form-input" required>
+        <div class="grid">
+            <div class="col">
+                <div class="card">
+                    <h3>Company Profile (About)</h3>
+                    <p style="font-size: 0.8rem; color: #666;">Updating text for the selected language.</p>
+                    <textarea id="about-edit" class="form-input" style="height: 120px;" placeholder="Describe the 88 Standard..."></textarea>
+                    <button id="save-about" class="btn">Update About Text</button>
                 </div>
-                <textarea id="custMsg" rows="5" class="form-input" required></textarea>
-                <button type="submit" id="sendBtn" class="btn-red" data-i18n="form_btn">SEND REQUEST</button>
-            </form>
-        </div>
-    </div>
-</section>
 
-<footer class="main-footer">
-    <div class="footer-inner">
-        <div class="footer-top">
-            <div class="footer-brand">
-                <div class="logo-container">
-    <a href="#" class="logo-container">
-        <img src="SERVISS88.png" alt="88 Serviss Logo" class="site-logo">
-    </a>
-
+                <div class="card">
+                    <h3>Add New Project</h3>
+                    <input type="text" id="g-title" placeholder="Project Title" class="form-input">
+                    <input type="text" id="g-url" placeholder="Direct Image URL (https://...)" class="form-input">
+                    <textarea id="g-desc" placeholder="Project Description" class="form-input" style="height: 80px;"></textarea>
+                    <label style="display: block; margin: 10px 0; cursor: pointer;">
+                        <input type="checkbox" id="g-hero"> Feature in Hero Slider
+                    </label>
+                    <button id="add-gallery" class="btn">Publish to Gallery</button>
                 </div>
-                <p data-i18n="footer_desc">Elevating standards since 2026. Premium solutions for ambitious projects.</p>
             </div>
-            <div class="footer-contact">
-                <h4 data-i18n="footer_connect">Connect</h4>
-                <a href="tel:+37127666667" class="phone-link">+371 27666667</a>
+
+            <div class="col">
+                <div class="card card-red">
+                    <h3>Client Inquiries</h3>
+                    <div id="inquiry-list" style="max-height: 500px; overflow-y: auto;">
+                        <p style="color: #999; text-align: center;">No inquiries yet.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Gallery Assets (<span id="current-view-lang">EN</span>)</h3>
+                    <div id="admin-gallery" style="max-height: 400px; overflow-y: auto;"></div>
+                </div>
             </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 88 Service. <span data-i18n="footer_rights">All rights reserved.</span></p>
         </div>
     </div>
-</footer>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, doc, onSnapshot, collection, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, query, orderBy, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyAEvwmPsMFa1T6iSxvg6zFoZBd_R55rCQ8",
@@ -107,120 +104,114 @@
     };
 
     const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
     const db = getFirestore(app);
 
-    const translations = {
-        en: {
-            nav_home: "Home", nav_about: "About", nav_gallery: "Gallery", nav_contact: "Contact",
-            since: "Since 2026", about_title: "The 88 Standard", form_title: "START A PROJECT",
-            form_btn: "SEND REQUEST", footer_desc: "Elevating standards since 2026. Premium solutions for ambitious projects.",
-            footer_connect: "Connect", footer_rights: "All rights reserved.", slogan: "Service",
-            ph_name: "Name", ph_email: "Email", ph_msg: "Project details...",
-            msg_wait: "Please wait 1 minute.", msg_sent: "Sent!", msg_err: "Error."
-        },
-        lv: {
-            nav_home: "Sākums", nav_about: "Par mums", nav_gallery: "Galerija", nav_contact: "Kontakti",
-            since: "Kopš 2026", about_title: "88 Standarts", form_title: "SĀKT PROJEKTU",
-            form_btn: "SŪTĪT PIETEIKUMU", footer_desc: "Paaugstinām standartus kopš 2026. gada. Premium risinājumi ambicioziem projektiem.",
-            footer_connect: "Sazināties", footer_rights: "Visas tiesības aizsargātas.", slogan: "Serviss",
-            ph_name: "Vārds", ph_email: "E-pasts", ph_msg: "Projekta detaļas...",
-            msg_wait: "Lūdzu, uzgaidiet 1 minūti.", msg_sent: "Nosūtīts!", msg_err: "Kļūda."
-        },
-        ru: {
-            nav_home: "Главная", nav_about: "О нас", nav_gallery: "Галерея", nav_contact: "Контакты",
-            since: "С 2026 года", about_title: "Стандарт 88", form_title: "НАЧАТЬ ПРОЕКТ",
-            form_btn: "ОТПРАВИТЬ ЗАПРОС", footer_desc: "Повышаем стандарты с 2026 года. Премиальные решения для амбициозных проектов.",
-            footer_connect: "Связаться", footer_rights: "Все права защищены.", slogan: "Сервис",
-            ph_name: "Имя", ph_email: "Эл. почта", ph_msg: "Детали проекта...",
-            msg_wait: "Пожалуйста, подождите 1 минуту.", msg_sent: "Отправлено!", msg_err: "Ошибка."
-        }
+    const getLang = () => document.getElementById('admin-lang').value;
+
+    // --- Authentication ---
+    document.getElementById('loginBtn').onclick = () => {
+        const e = document.getElementById('email').value;
+        const p = document.getElementById('pass').value;
+        signInWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
     };
 
-    let currentLang = 'en';
-    let unsubAbout, unsubGallery;
+    document.getElementById('logoutBtn').onclick = () => signOut(auth);
 
-    const menuToggle = document.getElementById('mobile-menu');
-    const navLinks = document.getElementById('nav-links');
-
-    menuToggle.addEventListener('click', () => {
-        menuToggle.classList.toggle('active');
-        navLinks.classList.toggle('active');
+    onAuthStateChanged(auth, user => {
+        document.getElementById('panel').classList.toggle('hidden', !user);
+        document.getElementById('login-form').classList.toggle('hidden', !!user);
+        if(user) loadData();
     });
 
-    window.changeLang = (lang) => {
-        currentLang = lang;
-        document.querySelectorAll('.lang-btn').forEach(b => {
-            b.classList.toggle('active', b.innerText.toLowerCase() === lang);
-        });
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-            el.innerText = translations[lang][el.getAttribute('data-i18n')];
-        });
-        document.getElementById('custName').placeholder = translations[lang].ph_name;
-        document.getElementById('custEmail').placeholder = translations[lang].ph_email;
-        document.getElementById('custMsg').placeholder = translations[lang].ph_msg;
-
-        navLinks.classList.remove('active');
-        menuToggle.classList.remove('active');
-        fetchData();
+    // --- Data Management ---
+    document.getElementById('admin-lang').onchange = () => {
+        document.getElementById('current-view-lang').innerText = getLang().toUpperCase();
+        loadData();
     };
 
-    function fetchData() {
-        if(unsubAbout) unsubAbout();
-        if(unsubGallery) unsubGallery();
-
-        unsubAbout = onSnapshot(doc(db, "content", `about_${currentLang}`), d => {
-            document.getElementById('about-text').innerText = d.exists() ? d.data().text : "...";
+    function loadData() {
+        const lang = getLang();
+        
+        // 1. Sync About Text
+        onSnapshot(doc(db, "content", `about_${lang}`), d => {
+            if(d.exists()) document.getElementById('about-edit').value = d.data().text;
+            else document.getElementById('about-edit').value = "";
         });
 
-        unsubGallery = onSnapshot(query(collection(db, `gallery_${currentLang}`), orderBy("timestamp", "desc")), snap => {
-            const gList = document.getElementById('gallery-list');
-            const sTrack = document.getElementById('main-slider');
-            gList.innerHTML = ''; sTrack.innerHTML = '';
-
-            let hCount = 0;
-            snap.docs.forEach((d, i) => {
+        // 2. Sync Gallery Items
+        onSnapshot(query(collection(db, `gallery_${lang}`), orderBy("timestamp", "desc")), s => {
+            const list = document.getElementById('admin-gallery');
+            list.innerHTML = s.empty ? '<p style="color:#999; padding:10px;">No images in this language.</p>' : '';
+            s.forEach(d => {
                 const item = d.data();
-                if(item.isHero && hCount < 3) {
-                    sTrack.innerHTML += `<div class="slide" style="background-image:url('${item.url}')"><div class="slide-overlay"><div class="hero-text"><h1>${item.title.toUpperCase()}</h1></div></div></div>`;
-                    hCount++;
-                }
-                const rev = i % 2 !== 0 ? 'reverse' : '';
-                gList.innerHTML += `<div class="gallery-block ${rev}"><div class="gallery-img-wrapper"><img src="${item.url}"></div><div class="gallery-text"><h3>${item.title}</h3><p>${item.description}</p></div></div>`;
+                list.innerHTML += `
+                    <div class="list-item">
+                        <img src="${item.url}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;" onerror="this.src='https://placehold.co/50x50?text=Error'">
+                        <div style="flex-grow:1; font-size:0.9rem;">
+                            <strong>${item.title}</strong> ${item.isHero ? '⭐' : ''}
+                        </div>
+                        <button onclick="window.delGal('${d.id}')" style="color:var(--red); border:none; background:none; cursor:pointer; font-size:1.2rem;">&times;</button>
+                    </div>`;
             });
+        });
 
-            if(hCount > 0) {
-                sTrack.style.width = (hCount * 100) + "%";
-                sTrack.querySelectorAll('.slide').forEach(s => s.style.width = (100 / hCount) + "%");
-            }
+        // 3. Sync Inquiries (Global)
+        onSnapshot(query(collection(db, "inquiries"), orderBy("timestamp", "desc")), s => {
+            const list = document.getElementById('inquiry-list');
+            list.innerHTML = s.empty ? '<p style="color:#999; text-align:center;">No inquiries received.</p>' : '';
+            s.forEach(d => {
+                const data = d.data();
+                const date = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleString() : 'Just now';
+                list.innerHTML += `
+                    <div class="list-item inquiry-card">
+                        <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+                            <strong>${data.name}</strong>
+                            <span class="lang-badge">${data.lang || 'en'}</span>
+                        </div>
+                        <a href="mailto:${data.email}" class="email-link">${data.email}</a>
+                        <div style="font-size:0.9rem; color:#444; margin:10px 0; background:#fff; padding:10px; border-radius:6px; border:1px solid #eee; width:100%; box-sizing:border-box;">
+                            ${data.message}
+                        </div>
+                        <div style="width:100%; display:flex; justify-content:space-between; align-items:center; font-size:0.7rem; color:#999;">
+                            <span>${date}</span>
+                            <button onclick="window.delInq('${d.id}')" style="color:var(--red); border:none; background:none; cursor:pointer; font-weight:bold; font-size:0.7rem;">DELETE</button>
+                        </div>
+                    </div>`;
+            });
         });
     }
 
-    let lastSent = 0;
-    document.getElementById('contactForm').onsubmit = async (e) => {
-        e.preventDefault();
-        if(Date.now() - lastSent < 60000) return alert(translations[currentLang].msg_wait);
-        try {
-            await addDoc(collection(db, "inquiries"), {
-                name: document.getElementById('custName').value,
-                email: document.getElementById('custEmail').value,
-                message: document.getElementById('custMsg').value,
-                lang: currentLang,
-                timestamp: serverTimestamp()
-            });
-            lastSent = Date.now();
-            alert(translations[currentLang].msg_sent);
-            e.target.reset();
-        } catch (e) { alert(translations[currentLang].msg_err); }
+    // --- Global Actions ---
+    window.delGal = async (id) => { if(confirm("Permanently remove this project?")) await deleteDoc(doc(db, `gallery_${getLang()}`, id)); };
+    window.delInq = async (id) => { if(confirm("Delete this inquiry?")) await deleteDoc(doc(db, "inquiries", id)); };
+
+    document.getElementById('save-about').onclick = async () => {
+        const text = document.getElementById('about-edit').value;
+        await setDoc(doc(db, "content", `about_${getLang()}`), { text: text });
+        alert("About info updated for " + getLang().toUpperCase());
     };
 
-    document.querySelectorAll('.nav-item').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            menuToggle.classList.remove('active');
-        });
-    });
+    document.getElementById('add-gallery').onclick = async () => {
+        const title = document.getElementById('g-title').value;
+        const url = document.getElementById('g-url').value;
+        const desc = document.getElementById('g-desc').value;
+        const isHero = document.getElementById('g-hero').checked;
 
-    changeLang('en');
+        if(!title || !url) return alert("Title and URL are required.");
+
+        await addDoc(collection(db, `gallery_${getLang()}`), {
+            title, url, description: desc, isHero, timestamp: serverTimestamp()
+        });
+
+        alert("Project Published!");
+        // Reset fields
+        document.getElementById('g-title').value = '';
+        document.getElementById('g-url').value = '';
+        document.getElementById('g-desc').value = '';
+        document.getElementById('g-hero').checked = false;
+    };
+
 </script>
 </body>
 </html>
