@@ -9,34 +9,24 @@
 </head>
 <body>
 
-<nav class="glass-nav">
-    <div class="nav-inner">
-        <a href="#" class="logo-container">
-            <a href="#" class="logo-container">
-            <img src="SERVISS88.png" alt="88 Serviss Logo" class="site-logo">
-</a>
-        </a>
-        
-        <div class="menu-toggle" id="mobile-menu">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-
-        <div class="nav-links" id="nav-links">
-            <a href="#main-slider" class="nav-item" data-i18n="nav_home">Home</a>
-            <a href="#about" class="nav-item" data-i18n="nav_about">About</a>
-            <a href="#gallery" class="nav-item" data-i18n="nav_gallery">Gallery</a>
-            <a href="#contactForm" class="nav-item" data-i18n="nav_contact">Contact</a>
-            
-            <div class="lang-switch">
-                <button class="lang-btn" onclick="changeLang('en')">EN</button>
-                <button class="lang-btn" onclick="changeLang('lv')">LV</button>
-                <button class="lang-btn" onclick="changeLang('ru')">RU</button>
+<div class="nav-links" id="nav-links">
+    <a href="#main-slider" class="nav-item" data-i18n="nav_home">Home</a>
+    <a href="#about" class="nav-item" data-i18n="nav_about">About</a>
+    
+    <div class="dropdown">
+        <a href="#gallery" class="nav-item" data-i18n="nav_gallery">Projects ▾</a>
+        <div class="dropdown-content" id="nav-projects-list">
             </div>
-        </div>
     </div>
-</nav>
+
+    <a href="#contactForm" class="nav-item" data-i18n="nav_contact">Contact</a>
+
+    <div class="lang-switch">
+        <button class="lang-btn" onclick="changeLang('en')">EN</button>
+        <button class="lang-btn" onclick="changeLang('lv')">LV</button>
+        <button class="lang-btn" onclick="changeLang('ru')">RU</button>
+    </div>
+</div>
 
 <header class="hero-slider">
     <div class="slider-track" id="main-slider"></div>
